@@ -22,8 +22,11 @@ function LoginMain() {
     }
 
     return (
-        <main className='flex flex-col items-center p-4 w-full h-auto bg-gray-100'>
-            <div className='bg-white p-8 rounded shadow-md w-full max-w-xl'>
+        <main className='flex flex-col items-center w-full m-0 h-auto bg-[#F8F6F6]'>
+            <img 
+            src="https://cta.org.co/waitro-rfp-web/wp-content/uploads/sites/8/2024/02/UDEM-3-1380x690.jpg" alt="img_udemedellin" 
+            className='w-full  h-52 object-cover max-w-xl'/>
+            <div className='bg-white p-8 rounded shadow-md w-full max-w-xl pt-10 pb-20'>
                 {/* ...existing code... */}
                 <form onSubmit={handleSubmit}>
                     <div className='mb-4 w-full'>
