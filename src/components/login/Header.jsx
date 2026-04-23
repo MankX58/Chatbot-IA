@@ -5,7 +5,7 @@ function LoginHeader() {
 return (
     <header className='flex flex-col items-center'>
             <div className='flex w-full max-w-xl items-center justify-between p-4 bg-[#FFFFFF] m-0'>
-                    <img src="https://play-lh.googleusercontent.com/L4dVQTWEbS5NNjM4XVpc0cpz2E2KQsuaM4ht_4xoaqy8QECmiYXhy4UG9dWVrX3rxRM"
+                    <img src="../../../public/UdeM Escudo.png"
                      alt="Logo udem"
                      className='size-12' />
                     <h1 className='font-verdana text-center font-bold text-xl'>Universidad de Medellín</h1>
