@@ -1,9 +1,18 @@
 @import "tailwindcss";
 
 * {
-    transition: all 0.3s ease-in-out;
+    box-sizing: border-box;
 }
 
+html,
 body {
+    width: 100%;
+    min-height: 100dvh;
+    margin: 0;
+    overflow-x: hidden;
     background-color: #F8F6F6;
+}
+
+#root {
+    min-height: 100dvh;
 }

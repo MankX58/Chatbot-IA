@@ -17,7 +17,7 @@ function MessageBubble({ message, onFeedback }) {
   const isUser = message.role === 'user';
 
   return (
-    <div className={`flex max-w-[80%] gap-3 ${isUser ? 'self-end flex-row-reverse' : 'self-start'}`}>
+    <div className={`flex max-w-[92%] gap-3 sm:max-w-[80%] ${isUser ? 'self-end flex-row-reverse' : 'self-start'}`}>
       {!isUser && <BotIcon />}
       <div className="flex flex-col gap-1">
         {!isUser && <span className="text-[11px] font-semibold uppercase tracking-[0.5px] text-neutral-500">ASISTENTE VIRTUAL</span>}
@@ -63,7 +63,7 @@ function MessageBubble({ message, onFeedback }) {
 
 function TypingIndicator() {
   return (
-    <div className="flex max-w-[80%] gap-3 self-start">
+    <div className="flex max-w-[92%] gap-3 self-start sm:max-w-[80%]">
       <BotIcon />
       <div className="flex flex-col gap-1">
         <span className="text-[11px] font-semibold uppercase tracking-[0.5px] text-neutral-500">ASISTENTE VIRTUAL</span>
@@ -107,8 +107,8 @@ function RatingModal({ isOpen, onClose, onSubmit }) {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-1000 flex items-center justify-center bg-black/50" onClick={(e) => e.target === e.currentTarget && handleClose()}>
-      <div className="mx-5 w-full max-w-105 rounded-[20px] bg-white p-8 shadow-2xl">
+    <div className="fixed inset-0 z-1000 flex items-center justify-center bg-black/50 p-4" onClick={(e) => e.target === e.currentTarget && handleClose()}>
+      <div className="w-full max-w-105 rounded-[20px] bg-white p-5 shadow-2xl sm:p-8">
         {!submitted ? (
           <>
             <div className="mb-6 text-center">
@@ -156,7 +156,7 @@ function RatingModal({ isOpen, onClose, onSubmit }) {
               />
             </div>
 
-            <div className="flex justify-end gap-3">
+            <div className="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
               <button className="cursor-pointer rounded-[10px] border border-neutral-300 bg-white px-5 py-2.5 text-sm text-neutral-500 transition hover:bg-neutral-100" onClick={handleClose}>Omitir</button>
               <button
                 className={`rounded-[10px] border-0 px-6 py-2.5 text-sm font-semibold text-white transition ${rating ? 'cursor-pointer bg-[#D32F2F] hover:bg-[#9f2323]' : 'cursor-not-allowed bg-neutral-400'}`}
@@ -208,8 +208,8 @@ function EscalationModal({ isOpen, onClose, onSubmit }) {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-1000 flex items-center justify-center bg-black/50" onClick={(e) => e.target === e.currentTarget && handleClose()}>
-      <div className="mx-5 w-full max-w-105 rounded-[20px] bg-white p-8 shadow-2xl">
+    <div className="fixed inset-0 z-1000 flex items-center justify-center bg-black/50 p-4" onClick={(e) => e.target === e.currentTarget && handleClose()}>
+      <div className="w-full max-w-105 rounded-[20px] bg-white p-5 shadow-2xl sm:p-8">
         {!submitted ? (
           <>
             <div className="mb-6 text-center">
@@ -236,7 +236,7 @@ function EscalationModal({ isOpen, onClose, onSubmit }) {
               />
             </div>
 
-            <div className="flex justify-end gap-3">
+            <div className="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
               <button className="cursor-pointer rounded-[10px] border border-neutral-300 bg-white px-5 py-2.5 text-sm text-neutral-500 transition hover:bg-neutral-100" onClick={handleClose}>Cancelar</button>
               <button
                 className={`rounded-[10px] border-0 px-6 py-2.5 text-sm font-semibold text-white transition ${context.trim() ? 'cursor-pointer bg-[#D32F2F] hover:bg-[#9f2323]' : 'cursor-not-allowed bg-neutral-400'}`}
@@ -265,7 +265,7 @@ function EscalationModal({ isOpen, onClose, onSubmit }) {
 
 function NotResolvedOptions({ onEscalate, onContinue, onClose }) {
   return (
-    <div className="mt-2 max-w-[90%] self-start rounded-2xl border border-neutral-200 bg-white p-4">
+    <div className="mt-2 max-w-[95%] self-start rounded-2xl border border-neutral-200 bg-white p-4 sm:max-w-[90%]">
       <div className="mb-3 flex items-center gap-2 text-sm font-semibold text-neutral-600">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
           <circle cx="12" cy="12" r="10" />
@@ -368,9 +368,9 @@ export default function ChatArea({
   const isChatEnded = chatLocked;
 
   return (
-    <main className="flex h-full w-full flex-col bg-[#f8f9fa]">
+    <main className="flex min-h-0 w-full flex-1 flex-col bg-[#f8f9fa]">
       {breadcrumb && (
-        <div className="flex items-center gap-2 border-b border-b-neutral-200 bg-white px-5 py-3 text-[13px] text-neutral-500">
+        <div className="flex items-center gap-2 border-b border-b-neutral-200 bg-white px-4 py-3 text-[13px] text-neutral-500 sm:px-5">
           <span>Soporte</span>
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <polyline points="9 18 15 12 9 6" />
@@ -379,7 +379,7 @@ export default function ChatArea({
         </div>
       )}
 
-      <div className="flex w-full flex-1 flex-col gap-4 overflow-y-auto p-5">
+      <div className="flex min-h-0 w-full flex-1 flex-col gap-4 overflow-y-auto p-4 sm:p-5">
         {messages.length === 0 && (
           <div className="flex h-full w-full flex-col items-center justify-center text-center text-neutral-400">
             <div className="mb-4 text-neutral-300">
@@ -388,7 +388,7 @@ export default function ChatArea({
               </svg>
             </div>
             <h3 className="mb-2 text-lg text-neutral-600">¡Bienvenido al Chat de Soporte!</h3>
-            <p className="max-w-80 text-sm">Escribe tu consulta sobre servicios tecnológicos de la Universidad de Medellín.</p>
+            <p className="max-w-[20rem] text-sm sm:max-w-80">Escribe tu consulta sobre servicios tecnológicos de la Universidad de Medellín.</p>
           </div>
         )}
 
@@ -410,17 +410,17 @@ export default function ChatArea({
       </div>
 
       {isChatEnded ? (
-        <div className="border-t border-t-neutral-200 bg-white px-5 py-4">
+        <div className="border-t border-t-neutral-200 bg-white px-4 py-4 sm:px-5">
           <div className="flex flex-col items-center gap-3 p-4 text-center">
             <p className="m-0 text-sm text-neutral-500">Se cerró el chat.</p>
-            <button type="button" className="flex h-11 w-[40%] cursor-pointer items-center justify-center rounded-[10px] border-0 bg-[#D32F2F] px-4 text-white transition hover:bg-[#9f2323]" onClick={onNewChat}>
+            <button type="button" className="flex h-11 w-full cursor-pointer items-center justify-center rounded-[10px] border-0 bg-[#D32F2F] px-4 text-white transition hover:bg-[#9f2323] sm:w-[40%]" onClick={onNewChat}>
               Iniciar nuevo chat
             </button>
           </div>
         </div>
       ) : (
-        <form className="border-t border-t-neutral-200 bg-white px-5 py-4" onSubmit={handleSubmit}>
-          <div className="flex items-center gap-2">
+        <form className="border-t border-t-neutral-200 bg-white px-4 py-4 sm:px-5" onSubmit={handleSubmit}>
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
             <input
               ref={inputRef}
               type="text"
@@ -432,7 +432,7 @@ export default function ChatArea({
             />
             <button
               type="submit"
-              className="flex h-11 w-11 cursor-pointer items-center justify-center rounded-[10px] border-0 bg-[#D32F2F] text-white transition hover:bg-[#9f2323] disabled:cursor-not-allowed disabled:bg-neutral-400"
+              className="flex h-11 w-full cursor-pointer items-center justify-center rounded-[10px] border-0 bg-[#D32F2F] text-white transition hover:bg-[#9f2323] disabled:cursor-not-allowed disabled:bg-neutral-400 sm:w-11"
               disabled={!input.trim() || isLoading}
               aria-label="Enviar mensaje"
             >

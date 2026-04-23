@@ -12,9 +12,9 @@ export default function ConfigPanel({ apiKey, onApiKeyChange }) {
     };
 
     return (
-        <main className="flex flex-1 items-start justify-center bg-[#f8f9fa] px-4 py-6 md:px-8 md:py-12">
-            <div className="w-full max-w-xl rounded-2xl border border-neutral-100 bg-white px-6 py-8 shadow md:px-10">
-                <h2 className="m-0 mb-6 flex items-center gap-2 text-[1.2rem] font-bold text-[#1a1a2e]">
+        <main className="flex min-h-0 flex-1 items-start justify-center bg-[#f8f9fa] px-4 py-4 sm:px-6 sm:py-8 md:py-12">
+            <div className="w-full max-w-xl rounded-2xl border border-neutral-100 bg-white px-4 py-6 shadow sm:px-6 md:px-10">
+                <h2 className="m-0 mb-6 flex items-center gap-2 text-[1.05rem] font-bold text-[#1a1a2e] sm:text-[1.2rem]">
                     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                         <circle cx="12" cy="12" r="3" />
                         <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
@@ -32,7 +32,7 @@ export default function ConfigPanel({ apiKey, onApiKeyChange }) {
                             platform.deepseek.com
                         </a>.
                     </p>
-                    <div className="mb-4 flex items-center gap-2">
+                    <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-center">
                         <input
                             id="apiKeyInput"
                             type={showKey ? 'text' : 'password'}
@@ -43,7 +43,7 @@ export default function ConfigPanel({ apiKey, onApiKeyChange }) {
                         />
                         <button
                             type="button"
-                            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[10px] border border-neutral-300 bg-white text-neutral-500 transition hover:border-[#B71C1C] hover:text-[#B71C1C]"
+                            className="flex h-10 w-full shrink-0 items-center justify-center rounded-[10px] border border-neutral-300 bg-white text-neutral-500 transition hover:border-[#B71C1C] hover:text-[#B71C1C] sm:w-10"
                             onClick={() => setShowKey(!showKey)}
                             aria-label={showKey ? 'Ocultar' : 'Mostrar'}
                         >

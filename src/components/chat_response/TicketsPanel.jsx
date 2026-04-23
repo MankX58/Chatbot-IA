@@ -8,23 +8,23 @@ export default function TicketsPanel({ tickets, onClear }) {
     const ticket = tickets.find((item) => item.id === selected);
 
     return (
-      <main className="flex flex-1 flex-col gap-0 overflow-y-auto p-6">
-        <div className="mb-5 flex items-center justify-between">
+      <main className="flex min-h-0 flex-1 flex-col gap-0 overflow-y-auto p-4 sm:p-6">
+        <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <button className="flex cursor-pointer items-center gap-1.5 border-0 bg-transparent p-0 text-sm font-semibold text-[#fb2c36]" onClick={() => setSelected(null)}>
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
               <polyline points="15 18 9 12 15 6" />
             </svg>
             Volver
           </button>
-          <div className="flex items-center gap-3">
+          <div className="flex flex-wrap items-center gap-3">
             <span className="rounded-md bg-[#fb2c36]/10 px-2 py-1 text-[10px] font-bold tracking-[0.08em] text-[#fb2c36]">{ticket.breadcrumb || 'CONSULTA GENERAL'}</span>
             <span className="text-xs text-neutral-400">{formatTicketDate(ticket.date)}</span>
           </div>
         </div>
 
-        <div className="flex flex-1 flex-col gap-3 overflow-y-auto py-5">
+        <div className="flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto py-5">
           {ticket.messages.map((msg, index) => (
-            <div key={index} className={`flex max-w-[80%] flex-col ${msg.role === 'user' ? 'self-end items-end' : 'self-start items-start'}`}>
+            <div key={index} className={`flex max-w-[92%] flex-col sm:max-w-[80%] ${msg.role === 'user' ? 'self-end items-end' : 'self-start items-start'}`}>
               <span className="mb-1 text-[11px] font-semibold uppercase tracking-[0.06em] text-neutral-400">{msg.role === 'user' ? 'Tú' : 'Asistente'}</span>
               <div className={`rounded-xl px-3.5 py-2.5 text-sm leading-relaxed ${msg.role === 'user' ? 'bg-[#fb2c36] text-white' : 'bg-neutral-100 text-neutral-700'}`}>
                 {msg.content.split('\n').map((line, lineIndex) => (
@@ -63,8 +63,8 @@ export default function TicketsPanel({ tickets, onClear }) {
   }
 
   return (
-    <main className="flex flex-1 flex-col gap-0 overflow-y-auto p-6">
-      <div className="mb-5 flex items-center justify-between">
+    <main className="flex min-h-0 flex-1 flex-col gap-0 overflow-y-auto p-4 sm:p-6">
+    <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <h2 className="text-lg font-bold text-neutral-900">Mis Tickets</h2>
         {tickets.length > 0 && (
           <button className="cursor-pointer rounded-lg border border-neutral-200 bg-transparent px-3 py-1.5 text-xs text-neutral-400 transition hover:border-red-400 hover:text-red-500" onClick={onClear}>

@@ -114,9 +114,9 @@ export default function ChatMain() {
   }, []);
 
   return (
-    <div className="flex h-screen flex-col overflow-hidden">
-      <Header onNavigate={handleSectionChange} />
-      <div className="flex flex-1 overflow-hidden">
+    <div className="flex min-h-dvh flex-col overflow-x-hidden bg-[#f8f9fa]">
+      <Header activeSection={activeSection} onNavigate={handleSectionChange} />
+      <div className="flex min-h-0 flex-1 flex-col overflow-hidden md:flex-row">
         <Sidebar activeSection={activeSection} onSectionChange={handleSectionChange} />
         {activeSection === APP_SECTIONS.CHAT && (
           <ChatArea

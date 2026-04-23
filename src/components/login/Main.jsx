@@ -25,7 +25,7 @@ function LoginMain() {
 
     if (isLoading) {
         return (
-            <main className='flex flex-col items-center w-full m-0 h-screen bg-[#F8F6F6] justify-center'>
+            <main className='flex min-h-dvh w-full flex-col items-center justify-center bg-[#F8F6F6] px-4 py-8'>
                 <div className='text-center'>
                     <div className='animate-spin rounded-full h-12 w-12 border-b-2 border-red-700 mx-auto mb-4'></div>
                     <p className='text-gray-700'>Cargando...</p>
@@ -35,12 +35,12 @@ function LoginMain() {
     }
 
     return (
-        <main className='flex flex-col items-center w-full m-0 h-auto bg-[#F8F6F6]'>
+        <main className='flex min-h-dvh w-full flex-col items-center bg-[#F8F6F6] px-4 py-4 sm:px-6'>
             <img 
             src="https://cta.org.co/waitro-rfp-web/wp-content/uploads/sites/8/2024/02/UDEM-3-1380x690.jpg" alt="img_udemedellin" 
-            className='w-full h-52 object-cover max-w-xl'/>
-            <div className='bg-white p-8 rounded shadow-md w-full max-w-xl pt-10 pb-20'>
-                <h2 className='text-2xl font-bold text-gray-800 mb-6 text-center'>Iniciar Sesión</h2>
+            className='h-auto w-full max-w-xl rounded-t-2xl object-cover aspect-[16/9]'/>
+            <div className='w-full max-w-xl rounded-b-2xl bg-white px-4 py-8 shadow-md sm:px-8 sm:py-10'>
+                <h2 className='mb-6 text-center text-xl font-bold text-gray-800 sm:text-2xl'>Iniciar Sesión</h2>
                 
                 {error && (
                     <div className='bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4'>
@@ -62,7 +62,7 @@ function LoginMain() {
                             <div className='w-full border-t border-gray-300'></div>
                         </div>
                         <div className='relative flex justify-center text-sm'>
-                            <span className='px-2 bg-white text-gray-500'>o continúa con SSO institucional <br />en proceso...</span>
+                            <span className='bg-white px-2 text-center text-gray-500'>o continúa con SSO institucional <br />en proceso...</span>
 
                         </div>
                     </div>
