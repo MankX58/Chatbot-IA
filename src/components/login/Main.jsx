@@ -1,88 +1,76 @@
-import React, { useState } from 'react'
-import { useNavigate } from "react-router-dom";
+import React, { useEffect } from 'react'
+import { useAuth0 } from '@auth0/auth0-react'
+import { useNavigate } from "react-router-dom"
 
 function LoginMain() {
-    const navigate = useNavigate();
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [rememberMe, setRememberMe] = useState(false);
-    const [error, setError] = useState('');
+    const navigate = useNavigate()
+    const { loginWithRedirect, isLoading, isAuthenticated, error } = useAuth0()
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-
-        if (!email.trim() || !password.trim()) {
-            setError('Completa correo y contraseña.');
-            return;
+    // Redirigir a home si ya está autenticado
+    useEffect(() => {
+        if (isAuthenticated) {
+            navigate('/home')
         }
+    }, [isAuthenticated, navigate])
 
-        setError('');
-        // Aquí puedes usar rememberMe si luego quieres guardar sesión persistente
-        navigate('/home');
+    const handleLoginClick = async () => {
+        try {
+            await loginWithRedirect({
+                appState: { returnTo: window.location.pathname }
+            })
+        } catch (err) {
+            console.error('Error during login:', err)
+        }
+    }
+
+    if (isLoading) {
+        return (
+            <main className='flex flex-col items-center w-full m-0 h-screen bg-[#F8F6F6] justify-center'>
+                <div className='text-center'>
+                    <div className='animate-spin rounded-full h-12 w-12 border-b-2 border-red-700 mx-auto mb-4'></div>
+                    <p className='text-gray-700'>Cargando...</p>
+                </div>
+            </main>
+        )
     }
 
     return (
         <main className='flex flex-col items-center w-full m-0 h-auto bg-[#F8F6F6]'>
             <img 
             src="https://cta.org.co/waitro-rfp-web/wp-content/uploads/sites/8/2024/02/UDEM-3-1380x690.jpg" alt="img_udemedellin" 
-            className='w-full  h-52 object-cover max-w-xl'/>
+            className='w-full h-52 object-cover max-w-xl'/>
             <div className='bg-white p-8 rounded shadow-md w-full max-w-xl pt-10 pb-20'>
-                {/* ...existing code... */}
-                <form onSubmit={handleSubmit}>
-                    <div className='mb-4 w-full'>
-                        <label className='block text-gray-700 text-sm font-bold mb-2' htmlFor='username'>
-                            Correo institucional
-                        </label>
-                        <input
-                            className='shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-red-800 *:focus:shadow-outline'
-                            id='username'
-                            type='email'
-                            placeholder='usuario@udem.edu.co'
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                        />
+                <h2 className='text-2xl font-bold text-gray-800 mb-6 text-center'>Iniciar Sesión</h2>
+                
+                {error && (
+                    <div className='bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4'>
+                        <p className='text-sm'>{error.message}</p>
                     </div>
+                )}
 
-                    <div className='mb-6'>
-                        <label className='block text-gray-700 text-sm font-bold mb-2' htmlFor='password'>
-                            Contraseña
-                        </label>
-                        <input
-                            className='shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-red-800 focus:shadow-outline'
-                            id='password'
-                            type='password'
-                            placeholder='********'
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                        />
+                <div className='space-y-4'>
+                    <button
+                        onClick={handleLoginClick}
+                        disabled={isLoading}
+                        className='bg-red-700 hover:bg-red-800 disabled:bg-gray-400 text-white font-bold py-3 px-4 rounded focus:outline-none focus:shadow-outline w-full transition duration-200'
+                    >
+                        {isLoading ? 'Conectando...' : 'Iniciar Sesión'}
+                    </button>
 
-                        <div className='flex items-center justify-between'>
-                            <label className='inline-flex items-center text-sm text-gray-700 cursor-pointer' htmlFor='rememberMe'>
-                                <input
-                                    id='rememberMe'
-                                    type='checkbox'
-                                    className='mr-2'
-                                    checked={rememberMe}
-                                    onChange={(e) => setRememberMe(e.target.checked)}
-                                />
-                                Recordarme
-                            </label>
+                    <div className='relative my-6'>
+                        <div className='absolute inset-0 flex items-center'>
+                            <div className='w-full border-t border-gray-300'></div>
+                        </div>
+                        <div className='relative flex justify-center text-sm'>
+                            <span className='px-2 bg-white text-gray-500'>o continúa con SSO institucional <br />en proceso...</span>
 
-                            <a href="#" className='text-xs text-red-500 hover:text-red-700 hover:underline'>¿Olvidaste tu contraseña?</a>
                         </div>
                     </div>
 
-                    {error && <p className='text-red-600 text-sm mb-3'>{error}</p>}
-
-                    <div className='flex items-center justify-between'>
-                        <button
-                            className='bg-red-700 hover:bg-red-800 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full'
-                            type='submit'
-                        >
-                            Iniciar Sesión
-                        </button>
-                    </div>
-                </form>
+                    <p className='text-center text-sm text-gray-600 mt-6'>
+                        ¿No tienes cuenta? <a href="#" className='text-red-700 hover:text-red-800 font-semibold'>Solicita acceso aquí</a>
+                    </p>
+                </div>
             </div>
         </main>
     )

@@ -1,171 +1,246 @@
-/**
- * Base de conocimiento personalizada - Soporte Tecnológico UdeM
- * 
- * Edita este archivo para agregar, modificar o eliminar soluciones.
- * Cada entrada tiene: tema, problema y solucion.
- * Esta información se inyecta en el contexto del modelo de IA
- * para que pueda dar respuestas precisas sobre la universidad.
- */
-
 const knowledgeBase = [
-    // ── Correo Institucional ──────────────────────────────────────
+    // ── Información General UdeM ───────────────────────────────────
     {
-        tema: "Correo Institucional",
-        problema: "Cambio o restablecimiento de contraseña del correo institucional",
-        solucion: `Para cambiar o restablecer la contraseña de tu correo institucional (@udemedellin.edu.co), sigue estos pasos:
-1. Ingresa al portal oficial de UdeM Virtual (https://udemvirtual.udem.edu.co).
-2. Haz clic en la opción "¿Olvidó su contraseña?" que aparece debajo del formulario de login.
-3. Ingresa tu correo institucional completo (ejemplo: usuario@udemedellin.edu.co).
-4. Revisa tu bandeja de entrada (o la carpeta de spam) y sigue las instrucciones del enlace enviado.
-5. Crea una nueva contraseña segura (mínimo 8 caracteres, incluyendo mayúsculas, minúsculas, números y un carácter especial).
-Nota: Si no recibes el correo en 10 minutos, contacta la mesa de ayuda al ext. 4123.`
+        tema: "Universidad de Medellín",
+        problema: "Información general de la universidad",
+        solucion: `La Universidad de Medellín es una institución privada de educación superior ubicada en Medellín, Antioquia (Cra. 87 #30-65).
+Cuenta con acreditación institucional de alta calidad vigente hasta 2027 otorgada por el Ministerio de Educación Nacional.
+Su lema es "Ciencia y Libertad" y se enfoca en la formación integral, investigación e innovación. :contentReference[oaicite:0]{index=0}`
     },
     {
-        tema: "Correo Institucional",
-        problema: "No se puede iniciar sesión en el correo institucional",
-        solucion: `Si no puedes iniciar sesión en tu correo institucional:
-1. Verifica que estés usando la dirección completa: usuario@udemedellin.edu.co.
-2. Asegúrate de no tener activado el Bloq Mayús (Caps Lock).
-3. Intenta restablecer la contraseña desde el portal oficial: https://udemvirtual.udem.edu.co → "¿Olvidó su contraseña?".
-4. Si el problema persiste, verifica que tu cuenta esté activa contactando la mesa de ayuda al ext. 4123 o al correo soportetic@udem.edu.co.
-5. Limpia la caché y cookies de tu navegador o intenta en modo incógnito.`
-    },
-    {
-        tema: "Correo Institucional",
-        problema: "Configurar correo institucional en el celular",
-        solucion: `Para configurar tu correo institucional en tu dispositivo móvil:
-1. Descarga la app Microsoft Outlook desde la App Store (iOS) o Play Store (Android).
-2. Abre la aplicación y toca "Agregar cuenta".
-3. Ingresa tu correo completo: usuario@udemedellin.edu.co.
-4. Ingresa tu contraseña institucional.
-5. Acepta los permisos de sincronización.
-6. Tu correo, calendario y contactos institucionales se sincronizarán automáticamente.
-Alternativa: También puedes usar la app nativa de correo de tu dispositivo seleccionando "Microsoft Exchange" como tipo de cuenta.`
+        tema: "Universidad de Medellín",
+        problema: "Ubicación y contacto de la universidad",
+        solucion: `La sede principal de la Universidad de Medellín está ubicada en:
+Carrera 87 N° 30-65, Medellín, Colombia.
+Teléfono: (604) 5904500.
+Horario de atención: lunes a viernes de 8:00 a.m. a 12:00 m. y de 2:00 p.m. a 6:00 p.m. :contentReference[oaicite:1]{index=1}`
     },
 
-    // ── LMS Canvas ────────────────────────────────────────────────
+    // ── Programas Académicos ───────────────────────────────────────
     {
-        tema: "LMS Canvas",
-        problema: "No puedo ingresar a la plataforma LMS Canvas",
-        solucion: `Si no puedes acceder a Canvas LMS:
-1. Ingresa a https://udem.instructure.com.
-2. Haz clic en "¿Olvidó su contraseña?" debajo del formulario de login.
-3. Ingresa tu correo institucional completo (@udemedellin.edu.co).
-4. Revisa tu bandeja de entrada y sigue las instrucciones del enlace enviado.
-5. Si el enlace no funciona, intenta en un navegador diferente (se recomienda Google Chrome o Firefox).
-6. Si el problema persiste, contacta la mesa de ayuda al ext. 4123.`
+        tema: "Programas Académicos",
+        problema: "Qué carreras ofrece la universidad",
+        solucion: `La Universidad de Medellín ofrece programas de:
+- Pregrado (ingenierías, derecho, comunicación, economía, psicología, entre otros)
+- Especializaciones
+- Maestrías
+- Doctorados
+
+Ejemplos de programas:
+- Ingeniería de Sistemas
+- Ingeniería Civil
+- Ingeniería Industrial
+- Psicología
+- Negocios Internacionales
+- Mercadeo :contentReference[oaicite:2]{index=2}`
     },
     {
-        tema: "LMS Canvas",
-        problema: "No aparecen mis cursos en Canvas",
-        solucion: `Si no puedes ver tus cursos en Canvas:
-1. Verifica que tu matrícula esté activa para el periodo actual en el Autoservicio estudiantil.
-2. Revisa la sección "Cursos" → "Todos los cursos" en el menú lateral de Canvas.
-3. Si el curso aún no aparece, es posible que el docente no haya publicado el curso todavía. Contacta directamente al profesor.
-4. Si tu matrícula está activa y el curso está publicado pero no lo ves, contacta la mesa de ayuda al ext. 4123 con tu número de documento y el nombre del curso.`
-    },
-    {
-        tema: "LMS Canvas",
-        problema: "No puedo subir archivos o tareas en Canvas",
-        solucion: `Si tienes problemas para subir archivos en Canvas:
-1. Verifica que el archivo no supere el límite de tamaño (generalmente 500 MB).
-2. Asegúrate de que el formato del archivo sea compatible (PDF, DOCX, XLSX, JPG, PNG).
-3. Intenta en otro navegador (preferiblemente Google Chrome).
-4. Desactiva temporalmente extensiones del navegador como bloqueadores de anuncios.
-5. Si la fecha de entrega ya pasó, el enlace de envío puede estar cerrado. Contacta a tu profesor.`
+        tema: "Programas Académicos",
+        problema: "Duración de las carreras",
+        solucion: `La duración de los programas depende del tipo:
+- Pregrados: entre 8 y 10 semestres
+- Especializaciones: 2 semestres
+- Maestrías: 3 a 4 semestres
+
+Por ejemplo, Ingeniería de Sistemas tiene una duración de 10 semestres. :contentReference[oaicite:3]{index=3}`
     },
 
-    // ── Internet Institucional ────────────────────────────────────
+    // ── Ingeniería de Sistemas ─────────────────────────────────────
     {
-        tema: "Internet Institucional (WiFi)",
-        problema: "No puedo conectarme al WiFi de la universidad",
-        solucion: `Para conectarte al WiFi institucional:
-1. Busca la red "UdeM_Estudiantes" (estudiantes) o "UdeM_Funcionarios" (empleados).
-2. Ingresa con tu usuario institucional (sin @udemedellin.edu.co) y tu contraseña del correo.
-3. Si no conecta, "olvida" la red desde la configuración WiFi de tu dispositivo y vuelve a conectarte.
-4. Verifica que tu adaptador WiFi esté habilitado y que no estés en modo avión.
-5. En algunos casos, es necesario registrar la dirección MAC de tu dispositivo. Envía un correo a soportetic@udem.edu.co con tu nombre completo, número de documento y la dirección MAC del dispositivo.
-6. Para obtener tu dirección MAC: Windows → cmd → "ipconfig /all" → busca "Dirección física". Mac → Preferencias de Sistema → Red → Avanzado → Hardware.`
+        tema: "Ingeniería de Sistemas",
+        problema: "Información del programa de Ingeniería de Sistemas",
+        solucion: `El programa de Ingeniería de Sistemas de la Universidad de Medellín:
+- Duración: 10 semestres
+- Modalidad: presencial
+- Código SNIES: 3134
+- Cuenta con acreditación de alta calidad
+
+Se enfoca en el desarrollo de software, sistemas de información y solución de problemas tecnológicos. :contentReference[oaicite:4]{index=4}`
     },
     {
-        tema: "Internet Institucional (WiFi)",
-        problema: "Internet institucional lento o intermitente",
-        solucion: `Si experimentas lentitud en el WiFi institucional:
-1. Cambia a otra red disponible (por ejemplo, de "UdeM_Estudiantes" a "UdeM_Eduroam" si tienes acceso).
-2. Aléjate de zonas con alta concurrencia de dispositivos.
-3. Reinicia el adaptador WiFi de tu dispositivo (desactívalo y actívalo nuevamente).
-4. En Windows: abre cmd y ejecuta "ipconfig /flushdns" para limpiar la caché DNS.
-5. Si el problema es generalizado, reporta la incidencia a TI al ext. 4123 indicando tu ubicación exacta (bloque, piso, salón).`
+        tema: "Ingeniería de Sistemas",
+        problema: "Qué se aprende en Ingeniería de Sistemas",
+        solucion: `En Ingeniería de Sistemas se aprende:
+- Programación y desarrollo de software
+- Bases de datos
+- Algoritmos y estructuras de datos
+- Sistemas de información
+- Ingeniería de software
+
+El programa forma profesionales capaces de resolver problemas mediante tecnología. :contentReference[oaicite:5]{index=5}`
     },
 
-    // ── Plataformas UdeM ──────────────────────────────────────────
+    // ── Admisiones ─────────────────────────────────────────────────
     {
-        tema: "Plataformas UdeM",
-        problema: "No puedo acceder al Autoservicio Estudiantil o SIGAA",
-        solucion: `Para acceder al Autoservicio Estudiantil / SIGAA:
-1. Ingresa a https://autoservicio.udem.edu.co (Autoservicio) o https://sigaa.udem.edu.co (SIGAA).
-2. Usa tu número de documento como usuario y la contraseña asignada.
-3. Si olvidaste tu contraseña, haz clic en "Recuperar contraseña" e ingresa tu correo institucional.
-4. Navegadores recomendados: Google Chrome o Microsoft Edge (versiones actualizadas).
-5. Si el portal muestra errores, intenta limpiar caché y cookies del navegador o usar modo incógnito.
-6. Si el problema persiste, contacta la mesa de ayuda al ext. 4123.`
+        tema: "Admisiones",
+        problema: "Cómo ingresar a la Universidad de Medellín",
+        solucion: `El proceso de admisión generalmente incluye:
+1. Registro en la plataforma oficial
+2. Pago de inscripción
+3. Entrevista (según el programa)
+4. Publicación de resultados
+5. Matrícula
+
+No todos los programas requieren examen de admisión. :contentReference[oaicite:6]{index=6}`
     },
     {
-        tema: "Plataformas UdeM",
-        problema: "Error al consultar horarios o notas",
-        solucion: `Si tienes errores al consultar horarios o notas en el Autoservicio:
-1. Verifica que tu matrícula esté activa para el periodo vigente.
-2. Intenta acceder en horarios de menor tráfico (evita las primeras horas del día).
-3. Usa Google Chrome actualizado y limpia la caché del navegador.
-4. Si el error dice "Sesión expirada", cierra todas las pestañas del navegador e intenta de nuevo.
-5. Reporta el error exacto (captura de pantalla) a soportetic@udem.edu.co.`
+        tema: "Admisiones",
+        problema: "Tipos de aspirantes",
+        solucion: `Los tipos de aspirantes en la Universidad de Medellín son:
+- Aspirante nuevo
+- Transferencia interna
+- Transferencia externa
+- Reingreso
+
+Cada uno tiene un proceso específico dentro del sistema de admisiones. :contentReference[oaicite:7]{index=7}`
     },
 
-    // ── Software Institucional ────────────────────────────────────
+    // ── Costos y Matrícula ─────────────────────────────────────────
     {
-        tema: "Software Institucional",
-        problema: "Activar licencia de Office 365 / Microsoft 365",
-        solucion: `Como estudiante o empleado de la UdeM, tienes acceso gratuito a Microsoft 365:
-1. Ingresa a https://portal.office.com.
-2. Inicia sesión con tu correo institucional: usuario@udemedellin.edu.co.
-3. Una vez dentro, haz clic en "Instalar Office" → "Aplicaciones de Microsoft 365".
-4. Descarga e instala el paquete completo (Word, Excel, PowerPoint, etc.).
-5. Al abrir cualquier aplicación de Office, inicia sesión con tu correo institucional para activar la licencia.
-6. La licencia se renueva automáticamente mientras seas estudiante o empleado activo.`
-    },
-    {
-        tema: "Software Institucional",
-        problema: "Acceso a software especializado o laboratorios virtuales",
-        solucion: `Para acceder a software especializado de la universidad:
-1. Consulta la disponibilidad del software en la página de Recursos TI: https://udem.edu.co/recursos-ti.
-2. Algunos programas están disponibles únicamente en los laboratorios de cómputo del campus.
-3. Para solicitar instalaciones remotas o acceso a laboratorios virtuales, envía un correo a soportetic@udem.edu.co indicando el software requerido y la justificación académica.
-4. Software como MATLAB, SPSS o AutoCAD puede tener licencias educativas gratuitas. Consulta con tu programa académico.`
+        tema: "Matrícula",
+        problema: "Costo de la matrícula",
+        solucion: `El costo de la matrícula depende del programa y del perfil del estudiante.
+Los valores se actualizan cada año y están regulados por el Ministerio de Educación Nacional.
+Puedes consultarlos en el portal oficial de la universidad. :contentReference[oaicite:8]{index=8}`
     },
 
-    // ── VPN y Acceso Remoto ───────────────────────────────────────
+    // ── Servicios Estudiantiles ────────────────────────────────────
     {
-        tema: "VPN y Acceso Remoto",
-        problema: "Configurar VPN para acceso remoto a recursos institucionales",
-        solucion: `Para conectarte a la VPN institucional:
-1. Descarga el cliente VPN indicado por TI (generalmente FortiClient o GlobalProtect).
-2. Configura la conexión con el servidor: vpn.udem.edu.co.
-3. Ingresa tu usuario institucional y contraseña del correo.
-4. Una vez conectado, tendrás acceso a recursos internos como bases de datos, repositorios y sistemas administrativos.
-5. Si necesitas acceso VPN, primero solicítalo al correo soportetic@udem.edu.co indicando tu rol y los recursos que necesitas acceder.`
+        tema: "Servicios",
+        problema: "Servicios disponibles para estudiantes",
+        solucion: `La Universidad de Medellín ofrece servicios como:
+- Consulta de notas
+- Horarios académicos
+- Inscripción de materias
+- Certificados académicos
+- Plataforma virtual
+- Biblioteca
+- Laboratorios
+- Centro de idiomas`
     },
 
-    // ── Impresión y Escaneo ───────────────────────────────────────
+    // ── Investigación ──────────────────────────────────────────────
     {
-        tema: "Impresión Institucional",
-        problema: "No puedo imprimir desde los computadores del campus",
-        solucion: `Para usar las impresoras del campus:
-1. Asegúrate de estar conectado a la red institucional (WiFi o cable).
-2. Las impresoras del campus se configuran automáticamente en los equipos de los laboratorios.
-3. Si la impresora no aparece, ve a Configuración → Dispositivos → Impresoras y selecciona "Agregar impresora".
-4. Para impresión desde tu portátil personal, necesitas instalar los drivers. Consulta en la mesa de ayuda (ext. 4123) cuál es la impresora de tu bloque y su dirección IP.
-5. Asegúrate de tener saldo disponible en tu cuenta de impresión estudiantil.`
+        tema: "Investigación",
+        problema: "Investigación en la universidad",
+        solucion: `La universidad cuenta con grupos de investigación, proyectos científicos y espacios de innovación.
+Promueve la investigación aplicada y el desarrollo tecnológico como parte de su formación académica. :contentReference[oaicite:9]{index=9}`
+    },
+
+    // ── Infraestructura ────────────────────────────────────────────
+    {
+        tema: "Infraestructura",
+        problema: "Instalaciones de la universidad",
+        solucion: `La Universidad de Medellín cuenta con:
+- Campus amplio
+- Biblioteca central
+- Laboratorios especializados
+- Coliseo
+- Espacios culturales y académicos
+
+También dispone de sede en Bogotá. :contentReference[oaicite:10]{index=10}`
+    },
+
+    // ── Casos prácticos chatbot ────────────────────────────────────
+    {
+        tema: "Chatbot",
+        problema: "Quiero estudiar en la universidad",
+        solucion: `Puedes estudiar en la Universidad de Medellín aplicando a uno de sus programas de pregrado o posgrado.
+Primero debes registrarte en la plataforma de admisiones y completar el proceso de inscripción.`
+    },
+    {
+        tema: "Chatbot",
+        problema: "Quiero estudiar Ingeniería de Sistemas",
+        solucion: `Ingeniería de Sistemas es un programa de 10 semestres enfocado en desarrollo de software y tecnología.
+Es una buena opción si te gusta programar, resolver problemas y trabajar con tecnología. :contentReference[oaicite:11]{index=11}`
+    },
+    {
+        tema: "Chatbot",
+        problema: "Dónde queda la universidad",
+        solucion: `La Universidad de Medellín está ubicada en el sector Belén Los Alpes, Medellín, Antioquia. :contentReference[oaicite:12]{index=12}`
+    },
+
+// ── Información Institucional ───────────────────────────────────
+    {
+        tema: "Universidad de Medellín",
+        problema: "Qué es la Universidad de Medellín",
+        solucion: `La Universidad de Medellín es una institución privada de educación superior fundada en 1950.
+    Cuenta con acreditación institucional de alta calidad vigente hasta 2027 y tiene más de 70 años de trayectoria académica. :contentReference[oaicite:0]{index=0}`
+    },
+    {
+        tema: "Universidad de Medellín",
+        problema: "Cuántos programas tiene la universidad",
+        solucion: `La Universidad de Medellín cuenta con aproximadamente:
+    - 26 programas de pregrado
+    - 36 especializaciones
+    - 22 maestrías
+    - 6 doctorados
+    
+    En total, más de 90 programas académicos. :contentReference[oaicite:1]{index=1}`
+    },
+    {
+        tema: "Universidad de Medellín",
+        problema: "Facultades de la universidad",
+        solucion: `La universidad cuenta con 7 facultades principales:
+    - Ingeniería
+    - Derecho
+    - Comunicación
+    - Ciencias Económicas y Administrativas
+    - Ciencias Sociales y Humanas
+    - Ciencias Básicas
+    - Diseño :contentReference[oaicite:2]{index=2}`
+    },
+    
+    // ── Campus e Infraestructura ───────────────────────────────────
+    {
+        tema: "Infraestructura",
+        problema: "Cómo es el campus de la universidad",
+        solucion: `El campus principal está ubicado en Belén Los Alpes, Medellín.
+    Cuenta con:
+    - Biblioteca
+    - Laboratorios
+    - Coliseo
+    - Teatro
+    - Zonas verdes (Campus Vivo)
+    - Espacios académicos modernos :contentReference[oaicite:3]{index=3}`
+    },
+    
+    // ── Admisiones ─────────────────────────────────────────────────
+    {
+        tema: "Admisiones",
+        problema: "Cómo es el proceso de admisión",
+        solucion: `El proceso de admisión incluye:
+    1. Registro en la plataforma
+    2. Pago de inscripción
+    3. Entrevista (según programa)
+    4. Entrega de documentos
+    5. Matrícula
+    
+    También existen modalidades como aspirante nuevo, transferencia y reingreso. :contentReference[oaicite:4]{index=4}`
+    },
+    
+    // ── Convenios e Internacionalización ───────────────────────────
+    {
+        tema: "Internacionalización",
+        problema: "La universidad tiene convenios",
+        solucion: `La Universidad de Medellín cuenta con convenios:
+    - Más de 100 internacionales
+    - Más de 50 nacionales
+    
+    Esto permite intercambios académicos y movilidad estudiantil. :contentReference[oaicite:5]{index=5}`
+    },
+    
+    // ── Datos relevantes chatbot ───────────────────────────────────
+    {
+        tema: "Información General",
+        problema: "Datos importantes de la universidad",
+        solucion: `Datos clave:
+    - Fundada en 1950
+    - Acreditación de alta calidad hasta 2027
+    - Más de 90 programas
+    - Campus urbano en Medellín
+    - Enfoque en investigación e innovación :contentReference[oaicite:6]{index=6}`
     }
-];
-
+    ];
+    
 export default knowledgeBase;

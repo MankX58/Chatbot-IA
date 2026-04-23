@@ -1,44 +1,66 @@
 // src/hooks/useChatHistory.js
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 
-const STORAGE_KEY = 'chat_tickets';
+const BASE_STORAGE_KEY = 'chat_tickets';
 
-function loadTickets() {
-    try {
-        return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
-    } catch {
-        return [];
-    }
+// Crear clave de storage basada en el usuario
+function getStorageKey(userId) {
+  return userId ? `${BASE_STORAGE_KEY}_${userId}` : BASE_STORAGE_KEY;
 }
 
-export function useChatHistory() {
-    const [tickets, setTickets] = useState(loadTickets);
+function loadTickets(userId) {
+  try {
+    const key = getStorageKey(userId);
+    return JSON.parse(localStorage.getItem(key)) || [];
+  } catch {
+    return [];
+  }
+}
 
-    const saveTicket = useCallback((messages, rating = null, feedback = '') => {
-        const newTicket = {
-            id: Date.now(),
-            date: new Date().toISOString(),
-            preview: messages.find(m => m.role === 'user')?.content?.slice(0, 80) || 'Sin mensaje',
-            breadcrumb: '',
-            messageCount: messages.length,
-            messages: messages.map(({ role, content, timestamp }) => ({ role, content, timestamp })),
-            rating,
-            feedback,
-        };
+export function useChatHistory(userId) {
+  const [tickets, setTickets] = useState(() => loadTickets(userId));
 
-        setTickets(prev => {
-            const updated = [newTicket, ...prev];
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
-            return updated;
-        });
+  // Recargar tickets cuando cambia el usuario
+  useEffect(() => {
+    setTickets(loadTickets(userId));
+  }, [userId]);
 
-        return newTicket.id;
-    }, []);
+  const saveTicket = useCallback((messages, rating = null, feedback = '', extraData = {}) => {
+    const newTicket = {
+      id: Date.now(),
+      date: new Date().toISOString(),
+      preview: messages.find(m => m.role === 'user')?.content?.slice(0, 80) || 'Sin mensaje',
+      breadcrumb: extraData.breadcrumb || '',
+      messageCount: messages.length,
+      messages: messages.map(({ role, content, timestamp }) => ({ role, content, timestamp })),
+      rating,
+      feedback,
+      status: extraData.status || 'closed',
+      escalationContext: extraData.escalationContext || null,
+      ...extraData,
+    };
 
-    const clearTickets = useCallback(() => {
-        localStorage.removeItem(STORAGE_KEY);
-        setTickets([]);
-    }, []);
+    setTickets(prev => {
+      const updated = [newTicket, ...prev];
+      const key = getStorageKey(userId);
+      localStorage.setItem(key, JSON.stringify(updated));
+      return updated;
+    });
 
-    return { tickets, saveTicket, clearTickets };
+    return newTicket.id;
+  }, [userId]);
+
+  const updateTickets = useCallback((updatedTickets) => {
+    setTickets(updatedTickets);
+    const key = getStorageKey(userId);
+    localStorage.setItem(key, JSON.stringify(updatedTickets));
+  }, [userId]);
+
+  const clearTickets = useCallback(() => {
+    const key = getStorageKey(userId);
+    localStorage.removeItem(key);
+    setTickets([]);
+  }, [userId]);
+
+  return { tickets, saveTicket, updateTickets, clearTickets };
 }
