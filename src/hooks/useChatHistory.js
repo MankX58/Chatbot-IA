@@ -17,14 +17,14 @@ export function useChatHistory(userId) {
   const [tickets, setTickets] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  const fetchTickets = useCallback(async () => {
+  const fetchTickets = useCallback(async (isSilent = false) => {
     if (!userId) {
       const local = readLocalJson(BASE_STORAGE_KEY, []);
       setTickets(local);
       return;
     }
 
-    setLoading(true);
+    if (!isSilent) setLoading(true);
     try {
       const response = await fetch(buildApiUrl(`/api/tickets?ownerId=${userId}`));
       if (response.ok) {
@@ -39,13 +39,20 @@ export function useChatHistory(userId) {
       const local = readLocalJson(getStorageKey(userId), []);
       setTickets(local);
     } finally {
-      setLoading(false);
+      if (!isSilent) setLoading(false);
     }
   }, [userId]);
 
   useEffect(() => {
-    fetchTickets();
-  }, [fetchTickets]);
+    fetchTickets(false);
+
+    if (userId) {
+      const interval = setInterval(() => {
+        fetchTickets(true);
+      }, 5000);
+      return () => clearInterval(interval);
+    }
+  }, [fetchTickets, userId]);
 
   const saveTicket = useCallback(async (messages, rating = null, feedback = '', extraData = {}) => {
     const lastConfidence = [...messages]
@@ -93,36 +100,46 @@ export function useChatHistory(userId) {
     return newTicket.id;
   }, [userId, fetchTickets]);
 
-  const updateTickets = useCallback(async (updatedTickets) => {
-    setTickets(updatedTickets);
-    const key = getStorageKey(userId);
-    writeLocalJson(key, updatedTickets);
+  const updateSingleTicket = useCallback(async (updatedTicket) => {
+    setTickets((prevTickets) => {
+      const nextTickets = prevTickets.map((t) => (t.id === updatedTicket.id ? updatedTicket : t));
+      const key = getStorageKey(userId);
+      writeLocalJson(key, nextTickets);
+      return nextTickets;
+    });
 
-    // Save all updated tickets to PostgreSQL DB
-    try {
-      await Promise.all(
-        updatedTickets.map((ticket) =>
-          fetch(buildApiUrl('/api/tickets'), {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              ...ticket,
-              ownerId: userId || 'anon',
-            }),
-          })
-        )
-      );
-      fetchTickets();
-    } catch (err) {
-      console.error('Error updating tickets in DB:', err);
+    if (userId) {
+      try {
+        await fetch(buildApiUrl('/api/tickets'), {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            ...updatedTicket,
+            ownerId: userId,
+          }),
+        });
+        fetchTickets(true);
+      } catch (err) {
+        console.error('Error updating ticket in DB:', err);
+      }
     }
   }, [userId, fetchTickets]);
 
-  const clearTickets = useCallback(() => {
+  const clearTickets = useCallback(async () => {
     const key = getStorageKey(userId);
     removeLocalItem(key);
     setTickets([]);
+
+    if (userId) {
+      try {
+        await fetch(buildApiUrl(`/api/tickets?ownerId=${userId}`), {
+          method: 'DELETE',
+        });
+      } catch (err) {
+        console.error('Error clearing tickets from DB:', err);
+      }
+    }
   }, [userId]);
 
-  return { tickets, loading, reload: fetchTickets, saveTicket, updateTickets, clearTickets };
+  return { tickets, loading, reload: fetchTickets, saveTicket, updateSingleTicket, clearTickets };
 }

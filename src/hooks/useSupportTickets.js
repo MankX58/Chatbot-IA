@@ -11,8 +11,8 @@ export function useSupportTickets() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const fetchTickets = useCallback(async () => {
-    setLoading(true);
+  const fetchTickets = useCallback(async (isSilent = false) => {
+    if (!isSilent) setLoading(true);
     try {
       const response = await fetch(buildApiUrl('/api/tickets'));
       if (!response.ok) {
@@ -31,12 +31,17 @@ export function useSupportTickets() {
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Error desconocido');
     } finally {
-      setLoading(false);
+      if (!isSilent) setLoading(false);
     }
   }, []);
 
   useEffect(() => {
-    fetchTickets();
+    fetchTickets(false);
+
+    const interval = setInterval(() => {
+      fetchTickets(true);
+    }, 5000);
+    return () => clearInterval(interval);
   }, [fetchTickets]);
 
   const setTicketStatus = useCallback(async (storageKey, ticketId, status) => {

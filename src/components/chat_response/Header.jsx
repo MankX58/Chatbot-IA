@@ -98,7 +98,7 @@ export default function Header({ activeSection, onNavigate, availableSections, r
 
         <button
           className="cursor-pointer rounded-lg bg-transparent p-0 text-left outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#B71C1C]"
-          onClick={(event) => handleNavigate(APP_SECTIONS.CHAT, event)}
+          onClick={(event) => handleNavigate(availableSections[0] || APP_SECTIONS.CHAT, event)}
         >
           <div className="flex min-w-0 items-center gap-3">
             <div className="flex h-9.5 w-9.5 shrink-0 items-center justify-center rounded-lg bg-linear-to-br from-[#B71C1C] to-[#D32F2F] text-lg font-extrabold text-white shadow">

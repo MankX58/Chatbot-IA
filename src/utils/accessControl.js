@@ -59,20 +59,25 @@ export function getUserRoles(user) {
 
 export function getAvailableSections(roles = []) {
   const normalizedRoles = new Set(roles);
-  const sections = [
+
+  if (normalizedRoles.has(USER_ROLES.ADMIN)) {
+    return [
+      APP_SECTIONS.CHAT,
+      APP_SECTIONS.TICKETS,
+      APP_SECTIONS.AGENT,
+      APP_SECTIONS.ANALYTICS,
+    ];
+  }
+
+  if (normalizedRoles.has(USER_ROLES.AGENT)) {
+    return [APP_SECTIONS.AGENT];
+  }
+
+  // Default user sections
+  return [
     APP_SECTIONS.CHAT,
     APP_SECTIONS.TICKETS,
   ];
-
-  if (normalizedRoles.has(USER_ROLES.AGENT) || normalizedRoles.has(USER_ROLES.ADMIN)) {
-    sections.push(APP_SECTIONS.AGENT);
-  }
-
-  if (normalizedRoles.has(USER_ROLES.ADMIN)) {
-    sections.push(APP_SECTIONS.ANALYTICS);
-  }
-
-  return sections;
 }
 
 export function isSectionAvailable(section, roles = []) {

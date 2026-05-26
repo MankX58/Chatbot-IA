@@ -3,7 +3,7 @@ import { query } from './db.js';
 function applyCorsHeaders(req, res) {
   const origin = req.headers.origin || '*';
   res.setHeader('Access-Control-Allow-Origin', origin);
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, DELETE, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
 }
 
@@ -135,6 +135,22 @@ export default async function handler(req, res) {
     }
   }
 
-  res.setHeader('Allow', 'GET, POST');
+  if (req.method === 'DELETE') {
+    try {
+      const { ownerId, ticketId } = req.query || {};
+      if (ticketId) {
+        await query('DELETE FROM tickets WHERE id = $1', [ticketId]);
+      } else if (ownerId) {
+        await query('DELETE FROM tickets WHERE owner_id = $1', [ownerId]);
+      } else {
+        return createJsonResponse(res, 400, { error: 'Falta ownerId o ticketId.' });
+      }
+      return createJsonResponse(res, 200, { success: true });
+    } catch (error) {
+      return createJsonResponse(res, 500, { error: error.message });
+    }
+  }
+
+  res.setHeader('Allow', 'GET, POST, DELETE');
   return createJsonResponse(res, 405, { error: 'Método no permitido.' });
 }

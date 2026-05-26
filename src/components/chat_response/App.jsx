@@ -38,7 +38,7 @@ export default function ChatMain() {
   const [breadcrumb, setBreadcrumb] = useState('');
   const [chatLocked, setChatLocked] = useState(false);
 
-  const { tickets, saveTicket, updateTickets, clearTickets } = useChatHistory(userId);
+  const { tickets, saveTicket, updateSingleTicket, clearTickets } = useChatHistory(userId);
 
   useEffect(() => {
     if (!isSectionAvailable(activeSection, userRoles)) {
@@ -138,26 +138,22 @@ export default function ChatMain() {
     const ticket = tickets.find((t) => t.id === ticketId);
     if (!ticket) return;
 
-    const updatedTickets = tickets.map((t) =>
-      t.id === ticketId
-        ? {
-            ...t,
-            messageCount: t.messageCount + 1,
-            updatedAt: new Date().toISOString(),
-            messages: [
-              ...(t.messages || []),
-              {
-                role: 'user',
-                content,
-                timestamp: new Date().toISOString(),
-              },
-            ],
-          }
-        : t
-    );
+    const updatedTicket = {
+      ...ticket,
+      messageCount: ticket.messageCount + 1,
+      updatedAt: new Date().toISOString(),
+      messages: [
+        ...(ticket.messages || []),
+        {
+          role: 'user',
+          content,
+          timestamp: new Date().toISOString(),
+        },
+      ],
+    };
 
-    updateTickets(updatedTickets);
-  }, [tickets, updateTickets]);
+    updateSingleTicket(updatedTicket);
+  }, [tickets, updateSingleTicket]);
 
   const handleSectionChange = useCallback((section) => {
     if (!isSectionAvailable(section, userRoles)) {
@@ -168,7 +164,7 @@ export default function ChatMain() {
   }, [userRoles]);
 
   return (
-    <div className="flex min-h-dvh flex-col overflow-x-hidden bg-[#f8f9fa]">
+    <div className="flex h-dvh flex-col overflow-hidden bg-[#f8f9fa]">
       <Header
         activeSection={activeSection}
         onNavigate={handleSectionChange}

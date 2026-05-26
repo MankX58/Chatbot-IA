@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import {
   formatConfidence,
   formatStars,
@@ -45,10 +45,17 @@ function StatusBadge({ status }) {
 export default function TicketsPanel({ tickets, onClear, onSendStudentMessage }) {
   const [selected, setSelected] = useState(null);
   const [studentMsg, setStudentMsg] = useState('');
+  const messagesEndRef = useRef(null);
 
-  if (selected) {
-    const ticket = tickets.find((item) => item.id === selected);
+  const ticket = selected ? tickets.find((item) => item.id === selected) : null;
 
+  useEffect(() => {
+    if (selected) {
+      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [selected, ticket?.messages]);
+
+  if (selected && ticket) {
     const handleSend = () => {
       if (!studentMsg.trim() || !onSendStudentMessage) return;
       onSendStudentMessage(ticket.id, studentMsg.trim());
@@ -95,6 +102,7 @@ export default function TicketsPanel({ tickets, onClear, onSendStudentMessage })
               )}
             </div>
           ))}
+          <div ref={messagesEndRef} />
         </div>
 
         {(ticket.status === 'escalated' || ticket.status === 'in_progress') && (
