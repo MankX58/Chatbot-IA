@@ -10,7 +10,7 @@ export const TICKET_STATUS = {
   CLOSED: 'closed',
 };
 
-export const RATING_LABELS = ['', 'Muy insatisfecho', 'Insatisfecho', 'Regular', 'Satisfecho', '¡Muy satisfecho! 🎉'];
+export const RATING_LABELS = ['', 'Muy insatisfecho', 'Insatisfecho', 'Regular', 'Satisfecho', 'Muy satisfecho'];
 
 let messageId = 0;
 
@@ -45,6 +45,35 @@ export function formatTicketDate(iso) {
 
 export function formatStars(n) {
   return n ? '★'.repeat(n) + '☆'.repeat(5 - n) : '—';
+}
+
+export function getConfidenceLabel(confidence) {
+  if (!confidence) return 'N/D';
+  if (confidence.label) return confidence.label;
+
+  const score = typeof confidence === 'number' ? confidence : confidence.score;
+
+  if (score >= 0.75) return 'Alta';
+  if (score >= 0.45) return 'Media';
+  return 'Baja';
+}
+
+export function formatConfidence(confidence) {
+  if (!confidence) return 'N/D';
+
+  const percentage = typeof confidence === 'number'
+    ? Math.round(confidence * 100)
+    : confidence.percentage ?? Math.round((confidence.score ?? 0) * 100);
+
+  return `${getConfidenceLabel(confidence)} (${percentage}%)`;
+}
+
+export function getConfidenceTone(confidence) {
+  const score = typeof confidence === 'number' ? confidence : confidence?.score ?? 0;
+
+  if (score >= 0.75) return 'high';
+  if (score >= 0.45) return 'medium';
+  return 'low';
 }
 
 export function detectBreadcrumb(text) {

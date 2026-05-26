@@ -1,5 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
-import { RATING_LABELS, formatTime } from './chatUtils';
+import {
+  RATING_LABELS,
+  formatConfidence,
+  formatTime,
+  getConfidenceTone,
+} from './chatUtils';
 
 function BotIcon() {
   return (
@@ -15,6 +20,12 @@ function BotIcon() {
 
 function MessageBubble({ message, onFeedback }) {
   const isUser = message.role === 'user';
+  const confidenceTone = getConfidenceTone(message.confidence);
+  const confidenceClasses = {
+    high: 'border-green-200 bg-green-50 text-green-700',
+    medium: 'border-amber-200 bg-amber-50 text-amber-700',
+    low: 'border-red-200 bg-red-50 text-red-700',
+  };
 
   return (
     <div className={`flex max-w-[92%] gap-3 sm:max-w-[80%] ${isUser ? 'self-end flex-row-reverse' : 'self-start'}`}>
@@ -28,6 +39,25 @@ function MessageBubble({ message, onFeedback }) {
             <p key={index} className={index > 0 ? 'mt-1' : ''}>{line}</p>
           ))}
         </div>
+
+        {!isUser && message.confidence && (
+          <div className="mt-2 flex flex-wrap items-center gap-2">
+            <span className={`rounded-full border px-2.5 py-1 text-[11px] font-semibold ${confidenceClasses[confidenceTone]}`}>
+              Confianza: {formatConfidence(message.confidence)}
+            </span>
+            {message.confidence.matchedTopic && (
+              <span className="text-[11px] text-neutral-500">
+                Base sugerida: {message.confidence.matchedTopic}
+              </span>
+            )}
+          </div>
+        )}
+
+        {!isUser && message.showEscalationHint && (
+          <div className="mt-2 rounded-xl border border-red-100 bg-red-50 px-3 py-2 text-[12px] text-red-700">
+            La confianza de esta respuesta es baja. Si no resuelve tu caso, te conviene escalarlo a soporte humano.
+          </div>
+        )}
 
         {!isUser && message.showFeedback && (
           <div className="mt-2 rounded-xl border border-neutral-200 bg-white p-3">

@@ -1,5 +1,3 @@
-// App.jsx
-
 import { useCallback, useState } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
 import Header from './Header';
@@ -9,27 +7,34 @@ import TicketsPanel from './TicketsPanel';
 import ConfigPanel from './ConfigPanel';
 import Footer from './Footer';
 import { sendMessage } from '../../../services/deepseekService';
+import { calculateResponseConfidence } from '../../../services/confidenceService';
 import { buildSystemPrompt } from '../../../config/systemPrompt';
-import { APP_SECTIONS, createMessage, detectBreadcrumb, TICKET_STATUS } from './chatUtils';
+import {
+  APP_SECTIONS,
+  createMessage,
+  detectBreadcrumb,
+  TICKET_STATUS,
+} from './chatUtils';
 import { useChatHistory } from '../../hooks/useChatHistory';
+import { STORAGE_KEYS, readSessionItem, writeSessionItem } from '../../utils/browserStorage';
 
-// ─── ChatMain ─────────────────────────────────────────────────────────────────
 export default function ChatMain() {
   const { user } = useAuth0();
   const userId = user?.sub;
-  
+
   const [activeSection, setActiveSection] = useState(APP_SECTIONS.CHAT);
   const [messages, setMessages] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [apiKey, setApiKey] = useState(() => localStorage.getItem('deepseek_api_key') || '');
+  const [apiKey, setApiKey] = useState(() => readSessionItem(STORAGE_KEYS.apiKey, ''));
   const [breadcrumb, setBreadcrumb] = useState('');
   const [chatLocked, setChatLocked] = useState(false);
-  
+
   const { tickets, saveTicket, clearTickets } = useChatHistory(userId);
 
   const handleApiKeyChange = useCallback((key) => {
-    setApiKey(key);
-    localStorage.setItem('deepseek_api_key', key);
+    const trimmedKey = key.trim();
+    setApiKey(trimmedKey);
+    writeSessionItem(STORAGE_KEYS.apiKey, trimmedKey);
   }, []);
 
   const handleSend = useCallback(
@@ -39,8 +44,8 @@ export default function ChatMain() {
         return;
       }
 
-      const userMsg = createMessage('user', text);
-      setMessages((prev) => [...prev, userMsg]);
+      const userMessage = createMessage('user', text);
+      setMessages((previousMessages) => [...previousMessages, userMessage]);
       setIsLoading(true);
 
       if (!breadcrumb) {
@@ -48,36 +53,45 @@ export default function ChatMain() {
       }
 
       try {
+        const history = [...messages, userMessage].map(({ role, content }) => ({ role, content }));
         const systemPrompt = buildSystemPrompt();
-        const history = [...messages, userMsg].map(({ role, content }) => ({ role, content }));
         const reply = await sendMessage(apiKey, history, systemPrompt);
-        const botMsg = createMessage('assistant', reply, { showFeedback: true });
-        setMessages((prev) => [...prev, botMsg]);
-      } catch (err) {
-        const errorMsg = createMessage(
+        const confidence = calculateResponseConfidence(text, reply);
+        const assistantMessage = createMessage('assistant', reply, {
+          showFeedback: true,
+          confidence,
+          showEscalationHint: confidence.autoEscalate,
+        });
+
+        setMessages((previousMessages) => [...previousMessages, assistantMessage]);
+      } catch (error) {
+        const errorMessage = createMessage(
           'assistant',
-          `⚠️ Error al conectar con DeepSeek: ${err.message}\n\nVerifica tu API key en la sección de Configuración.`,
+          `Error al conectar con DeepSeek: ${error.message}\n\nVerifica tu API key en la seccion de configuracion.`,
           { showFeedback: false }
         );
-        setMessages((prev) => [...prev, errorMsg]);
+
+        setMessages((previousMessages) => [...previousMessages, errorMessage]);
       } finally {
         setIsLoading(false);
       }
     },
-    [apiKey, messages, breadcrumb]
+    [apiKey, breadcrumb, messages]
   );
 
-  const handleFeedback = useCallback((msgId, isPositive) => {
-    setMessages((prev) =>
-      prev.map((msg) =>
-        msg.id === msgId ? { ...msg, showFeedback: false, feedback: isPositive } : msg
+  const handleFeedback = useCallback((messageId, isPositive) => {
+    setMessages((previousMessages) =>
+      previousMessages.map((message) =>
+        message.id === messageId
+          ? { ...message, showFeedback: false, feedback: isPositive }
+          : message
       )
     );
   }, []);
 
   const saveChatToTickets = useCallback((extraData = {}) => {
     if (chatLocked) return;
-    
+
     saveTicket(
       messages,
       extraData.rating || null,
@@ -85,7 +99,7 @@ export default function ChatMain() {
       { ...extraData, breadcrumb }
     );
     setChatLocked(true);
-  }, [messages, breadcrumb, saveTicket, chatLocked]);
+  }, [breadcrumb, chatLocked, messages, saveTicket]);
 
   const handleChatResolved = useCallback(({ rating, feedback }) => {
     saveChatToTickets({ rating, feedback, status: TICKET_STATUS.RESOLVED });
