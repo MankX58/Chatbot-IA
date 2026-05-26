@@ -1,5 +1,6 @@
 export const STORAGE_KEYS = {
   chatTickets: 'chat_tickets',
+  learnedKnowledge: 'learned_kb',
 };
 
 function getStorage(type) {

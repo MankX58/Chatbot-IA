@@ -16,6 +16,7 @@
 - Panel de soporte local con gestion de casos.
 - Dashboard administrativo local con metricas y deteccion de no resueltos.
 - Paneles de soporte y analitica visibles segun rol del usuario autenticado.
+- Aprendizaje automatico implementado (RF-12): el sistema aprende de respuestas de agentes y calificaciones positivas de usuarios.
 
 ## Cambios recientes
 - Se elimino el doble montaje de `Auth0Provider`.
@@ -32,15 +33,20 @@
 - Se agrego `src/utils/accessControl.js` para habilitar secciones por rol usando claims de Auth0 o listas de correos configurables.
 - Se agregaron fallbacks para correos de prueba por rol en `src/utils/accessControl.js` (admin, agente, usuario).
 - Se agrego el archivo `.env.local` configurando localmente las variables de Auth0 y los correos de prueba.
+- Se implemento RF-12: aprendizaje automatico. Se creo `src/services/learningService.js` que extrae conocimiento de tickets resueltos por agentes y chats con rating >= 4.
+- Se modifico `services/deepseekService.js` para enviar `learnedEntries` al backend en cada peticion de chat.
+- Se modifico `api/chat.js` para recibir, validar (max 20 entradas) y pasar `learnedEntries` al system prompt.
+- Se modifico `config/systemPrompt.js` para aceptar conocimiento aprendido e inyectarlo dinamicamente en la seccion `CONOCIMIENTO APRENDIDO`.
+- Se modifico `AgentPanel.jsx` con un checkbox (marcado por defecto) que permite al agente guardar su respuesta como conocimiento del chatbot.
+- Se agrego la clave `learnedKnowledge` en `src/utils/browserStorage.js`.
 - La tanda actual quedo validada con `npm.cmd run build` y `npm.cmd run lint`.
 
 
-## Siguientes pasos recomendados
-1. Probar el flujo completo con dependencias instaladas y corregir cualquier regresion visual.
-2. Implementar backend para tickets, estados reales y escalamientos.
-3. Reemplazar la heuristica de confianza por retrieval real contra base de conocimiento.
-4. Separar roles reales de usuario, agente y administrador.
-5. Conectar metricas a datos persistentes y no solo a `localStorage`.
+## Siguientes pasos recomendados (Pendientes de Implementación)
+1. **Persistencia y Backend Real (Afecta RF-04, RF-05, RF-07, RF-13, RF-14):** Migrar todo el almacenamiento de tickets, estados y métricas que actualmente reside en `localStorage` hacia una base de datos central (MongoDB/PostgreSQL/Supabase). Esto es crítico para que el Agente y Administrador vean los datos de los usuarios.
+2. **Retrieval-Augmented Generation (RAG) (Afecta RF-02 y RF-03):** Reemplazar la heurística léxica actual en `confidenceService.js` por una búsqueda vectorial real contra una base de conocimiento para calcular verdaderamente el nivel de confianza y mejorar las soluciones.
+3. ~~**Aprendizaje Automático (RF-12):**~~ ✅ Implementado. El sistema aprende de respuestas de agentes y calificaciones positivas.
+4. **Roles Institucionales en Producción (Afecta RF-09 y accesos):** Reemplazar las listas manuales locales (`.env.local`) por "Auth0 Actions" para que inyecten los roles reales institucionales en el token JWT.
 
 ## Restricciones y notas
 - No sobrescribir cambios del usuario sin revisar `git status`.
@@ -49,3 +55,4 @@
 - Si se toca trazabilidad de tickets, revisar `src/hooks/useChatHistory.js`, `src/hooks/useSupportTickets.js` y `src/services/ticketBoardService.js`.
 - Si se toca IA, revisar `services/deepseekService.js`, `api/chat.js`, `api/health.js` y la variable `DEEPSEEK_API_KEY` en Vercel.
 - Si se toca autorizacion por rol, revisar `src/utils/accessControl.js`, `src/components/chat_response/Header.jsx`, `src/components/chat_response/Sidebar.jsx` y `VITE_AUTH0_ROLES_CLAIM`.
+- Si se toca aprendizaje automatico (RF-12), revisar `src/services/learningService.js`, `services/deepseekService.js`, `api/chat.js`, `config/systemPrompt.js` y `src/components/chat_response/AgentPanel.jsx`.

@@ -1,12 +1,23 @@
 import knowledgeBase from './knowledgeBase.js';
 
-export function buildSystemPrompt() {
+export function buildSystemPrompt(learnedEntries = []) {
     const kbText = knowledgeBase
         .map(
             (entry) =>
                 `## ${entry.tema} — ${entry.problema}\n${entry.solucion}`
         )
         .join('\n\n');
+
+    const learnedText = learnedEntries.length
+        ? '\n\n═══ CONOCIMIENTO APRENDIDO (de interacciones previas) ═══\n\n'
+          + learnedEntries
+              .map(
+                  (entry) =>
+                      `## ${entry.tema} — ${entry.problema}\n${entry.solucion}`
+              )
+              .join('\n\n')
+          + '\n\n═══ FIN CONOCIMIENTO APRENDIDO ═══'
+        : '';
 
     return `Eres "UdeM Virtual", el asistente virtual de la Universidad de Medellín.
 
@@ -52,9 +63,10 @@ No uses:
 ═══ BASE DE CONOCIMIENTO ═══
 
 ${kbText}
+${learnedText}
 
 ═══ FIN ═══
 
 Responde usando esta información. 
 Si no está exactamente en la base pero es sobre la universidad, responde de forma lógica y útil.`;
-}
+}

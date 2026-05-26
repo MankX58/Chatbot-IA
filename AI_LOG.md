@@ -13,6 +13,24 @@ Este archivo mantiene un registro de tareas importantes, cambios significativos,
   - Habilitar CORS y peticiones `OPTIONS` en las funciones serverless para facilitar pruebas desde origenes distintos durante desarrollo.
   - Resolver la primera capa de autorizacion en frontend usando `VITE_AUTH0_ROLES_CLAIM` y listas de correos por entorno mientras no exista un backend de roles institucional.
   - Establecer fallbacks integrados de correos para `agente@ejemplo.com` y `admin@ejemplo.com` para garantizar funcionalidad fuera de la caja en pruebas locales.
+- **Cambios realizados (RF-12):** Se implemento aprendizaje automatico. Se creo `src/services/learningService.js` que extrae conocimiento de tickets resueltos por agentes y de chats con rating >= 4 estrellas, y lo almacena en `localStorage` bajo la clave `learned_kb`.
+- **Cambios realizados (RF-12):** Se modifico `services/deepseekService.js` para enviar `learnedEntries` al backend en cada peticion de chat.
+- **Cambios realizados (RF-12):** Se modifico `api/chat.js` para recibir, validar (maximo 20 entradas) y pasar `learnedEntries` a `buildSystemPrompt`.
+- **Cambios realizados (RF-12):** Se modifico `config/systemPrompt.js` para aceptar un parametro `learnedEntries` e inyectarlo en una seccion dinamica `CONOCIMIENTO APRENDIDO` del prompt del modelo.
+- **Cambios realizados (RF-12):** Se modifico `AgentPanel.jsx` con un checkbox (marcado por defecto) que permite al agente guardar su respuesta como conocimiento del chatbot al registrar una respuesta de soporte.
+- **Archivos agregados:** `src/services/learningService.js`.
+- **Archivos modificados:** `src/utils/browserStorage.js`, `services/deepseekService.js`, `api/chat.js`, `config/systemPrompt.js`, `src/components/chat_response/AgentPanel.jsx`.
+- **Validacion realizada:** `npm.cmd run build` y `npm.cmd run lint` ejecutados con resultado correcto tras implementar RF-12.
+- **Decisiones tecnicas (RF-12):**
+  - Usar `localStorage` como almacen intermedio del conocimiento aprendido hasta que se implemente la base de datos real.
+  - Limitar a 20 entradas aprendidas por peticion para no exceder el contexto del modelo DeepSeek.
+  - Priorizar las respuestas de agentes sobre las calificaciones positivas como fuente de conocimiento (mayor precision).
+  - El checkbox en AgentPanel esta marcado por defecto para fomentar el aprendizaje continuo del sistema.
+- **Pendientes actuales (Requisitos Funcionales faltantes o por optimizar):**
+  - **Falta persistencia en Backend (RF-04, RF-05, RF-07, RF-13, RF-14):** Migrar local storage a una BD real para que Agentes y Admins vean la data persistente.
+  - **Mejorar cálculo de confianza / RAG (RF-02, RF-03):** Cambiar la heurística local por una base de datos vectorial/búsqueda semántica.
+  - ~~**Aprendizaje automático (RF-12):**~~ ✅ Implementado.
+  - **Falta control de roles en Auth0 real (RF-09):** Cambiar el sistema manual por inyección de claims via Auth0 Actions.
 
 ## 2026-05-25
 - **Cambios realizados:** Se unifico la integracion de Auth0 en un solo `Auth0Provider`, se protegio la ruta `/home` con `ProtectedRoute`, se movio la API key de DeepSeek de `localStorage` a `sessionStorage`, y se implemento un calculo inicial de confianza para las respuestas del chatbot con visualizacion en chat y tickets.

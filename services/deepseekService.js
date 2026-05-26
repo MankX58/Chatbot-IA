@@ -1,4 +1,5 @@
 import { buildApiUrl } from '../config/runtimeConfig.js';
+import { getLearnedKnowledge } from '../src/services/learningService.js';
 
 const CHAT_API_URL = buildApiUrl('/api/chat');
 
@@ -6,16 +7,21 @@ const CHAT_API_URL = buildApiUrl('/api/chat');
  * Envia el historial del chat al backend para que la llamada a DeepSeek se haga
  * en el lado servidor usando las variables de entorno configuradas en Vercel.
  *
+ * Tambien envia las entradas de conocimiento aprendido para que se inyecten
+ * dinamicamente en el system prompt del modelo.
+ *
  * @param {Array<{role: string, content: string}>} messages
  * @returns {Promise<string>}
  */
 export async function sendMessage(messages) {
+  const learnedEntries = getLearnedKnowledge();
+
   const response = await fetch(CHAT_API_URL, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ messages }),
+    body: JSON.stringify({ messages, learnedEntries }),
   });
 
   if (!response.ok) {
@@ -30,3 +36,4 @@ export async function sendMessage(messages) {
   const data = await response.json();
   return data.reply ?? 'Sin respuesta del modelo.';
 }
+

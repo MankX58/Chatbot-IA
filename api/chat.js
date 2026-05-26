@@ -61,6 +61,18 @@ export default async function handler(req, res) {
         .map(({ role, content }) => ({ role, content }))
     : [];
 
+  const learnedEntries = Array.isArray(parsedBody?.learnedEntries)
+    ? parsedBody.learnedEntries
+        .filter(
+          (entry) =>
+            typeof entry?.tema === 'string' &&
+            typeof entry?.problema === 'string' &&
+            typeof entry?.solucion === 'string'
+        )
+        .map(({ tema, problema, solucion }) => ({ tema, problema, solucion }))
+        .slice(0, 20)
+    : [];
+
   if (!messages.length) {
     return createJsonResponse(res, 400, {
       error: 'Debes enviar al menos un mensaje en el historial.',
@@ -70,7 +82,7 @@ export default async function handler(req, res) {
   const requestBody = {
     model: DEFAULT_MODEL,
     messages: [
-      { role: 'system', content: buildSystemPrompt() },
+      { role: 'system', content: buildSystemPrompt(learnedEntries) },
       ...messages,
     ],
     temperature: 0.4,

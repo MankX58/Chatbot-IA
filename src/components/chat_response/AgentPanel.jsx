@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
 import { useSupportTickets } from '../../hooks/useSupportTickets';
+import { addLearnedEntry } from '../../services/learningService';
 import {
   formatConfidence,
   formatStatus,
@@ -45,6 +46,7 @@ export default function AgentPanel() {
   const [priorityFilter, setPriorityFilter] = useState('all');
   const [selectedId, setSelectedId] = useState(null);
   const [response, setResponse] = useState('');
+  const [addToKB, setAddToKB] = useState(true);
 
   const filteredTickets = tickets.filter((ticket) => {
     const activeMatch = statusFilter === 'active'
@@ -74,7 +76,15 @@ export default function AgentPanel() {
       createdAt: new Date().toISOString(),
       nextStatus: TICKET_STATUS.IN_PROGRESS,
     });
+
+    if (addToKB) {
+      const tema = selectedTicket.breadcrumb || 'CONSULTA GENERAL';
+      const problema = selectedTicket.messages?.find((m) => m.role === 'user')?.content || selectedTicket.preview || '';
+      addLearnedEntry(tema, problema, response.trim());
+    }
+
     setResponse('');
+    setAddToKB(true);
   };
 
   return (
@@ -229,7 +239,16 @@ export default function AgentPanel() {
                     value={response}
                     onChange={(event) => setResponse(event.target.value)}
                   />
-                  <div className="mt-3 flex justify-end">
+                  <div className="mt-3 flex items-center justify-between gap-3">
+                    <label className="flex cursor-pointer items-center gap-2 text-sm text-neutral-600">
+                      <input
+                        type="checkbox"
+                        checked={addToKB}
+                        onChange={(event) => setAddToKB(event.target.checked)}
+                        className="h-4 w-4 accent-[#B71C1C]"
+                      />
+                      Agregar a base de conocimiento del Chatbot
+                    </label>
                     <button
                       className="rounded-xl bg-[#B71C1C] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#9f2323]"
                       onClick={handleSubmitResponse}
