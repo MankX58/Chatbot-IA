@@ -126,25 +126,6 @@ export default function TicketsPanel({ tickets, onClear, onSendStudentMessage })
           </div>
         )}
 
-        {ticket.supportResponses?.length > 0 && (
-          <div className="mt-2 border-t border-t-neutral-200 pt-4">
-            <h3 className="mb-3 text-sm font-semibold uppercase tracking-[0.08em] text-neutral-500">
-              Respuestas de soporte
-            </h3>
-            <div className="space-y-3">
-              {ticket.supportResponses.map((entry) => (
-                <div key={entry.id} className="rounded-2xl border border-neutral-200 bg-neutral-50 p-4">
-                  <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
-                    <p className="text-sm font-semibold text-neutral-800">{entry.agentName}</p>
-                    <p className="text-[11px] text-neutral-400">{formatTicketDate(entry.createdAt)}</p>
-                  </div>
-                  <p className="text-sm text-neutral-700">{entry.body}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
         {(ticket.rating || ticket.feedback) && (
           <div className="mt-4 border-t border-t-neutral-200 pt-4">
             {ticket.rating && (
