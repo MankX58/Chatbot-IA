@@ -36,7 +36,7 @@ export default function ChatMain() {
   const [breadcrumb, setBreadcrumb] = useState('');
   const [chatLocked, setChatLocked] = useState(false);
 
-  const { tickets, saveTicket, clearTickets } = useChatHistory(userId);
+  const { tickets, saveTicket, updateTickets, clearTickets } = useChatHistory(userId);
 
   useEffect(() => {
     if (!isSectionAvailable(activeSection, userRoles)) {
@@ -130,6 +130,31 @@ export default function ChatMain() {
     clearTickets();
   }, [clearTickets]);
 
+  const handleSendStudentMessage = useCallback((ticketId, content) => {
+    const ticket = tickets.find((t) => t.id === ticketId);
+    if (!ticket) return;
+
+    const updatedTickets = tickets.map((t) =>
+      t.id === ticketId
+        ? {
+            ...t,
+            messageCount: t.messageCount + 1,
+            updatedAt: new Date().toISOString(),
+            messages: [
+              ...(t.messages || []),
+              {
+                role: 'user',
+                content,
+                timestamp: new Date().toISOString(),
+              },
+            ],
+          }
+        : t
+    );
+
+    updateTickets(updatedTickets);
+  }, [tickets, updateTickets]);
+
   const handleSectionChange = useCallback((section) => {
     if (!isSectionAvailable(section, userRoles)) {
       return;
@@ -168,7 +193,11 @@ export default function ChatMain() {
           />
         )}
         {activeSection === APP_SECTIONS.TICKETS && (
-          <TicketsPanel tickets={tickets} onClear={handleClearTickets} />
+          <TicketsPanel
+            tickets={tickets}
+            onClear={handleClearTickets}
+            onSendStudentMessage={handleSendStudentMessage}
+          />
         )}
         {activeSection === APP_SECTIONS.AGENT && isSectionAvailable(APP_SECTIONS.AGENT, userRoles) && (
           <AgentPanel />

@@ -13,19 +13,41 @@ function getStorageKey(userId) {
   return userId ? `${BASE_STORAGE_KEY}_${userId}` : BASE_STORAGE_KEY;
 }
 
-function loadTickets(userId) {
-  const key = getStorageKey(userId);
-  return readLocalJson(key, []);
-}
-
 export function useChatHistory(userId) {
-  const [tickets, setTickets] = useState(() => loadTickets(userId));
+  const [tickets, setTickets] = useState([]);
+  const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    setTickets(loadTickets(userId));
+  const fetchTickets = useCallback(async () => {
+    if (!userId) {
+      const local = readLocalJson(BASE_STORAGE_KEY, []);
+      setTickets(local);
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const response = await fetch(buildApiUrl(`/api/tickets?ownerId=${userId}`));
+      if (response.ok) {
+        const data = await response.json();
+        setTickets(data);
+      } else {
+        const local = readLocalJson(getStorageKey(userId), []);
+        setTickets(local);
+      }
+    } catch (err) {
+      console.error('Error fetching chat history from DB:', err);
+      const local = readLocalJson(getStorageKey(userId), []);
+      setTickets(local);
+    } finally {
+      setLoading(false);
+    }
   }, [userId]);
 
-  const saveTicket = useCallback((messages, rating = null, feedback = '', extraData = {}) => {
+  useEffect(() => {
+    fetchTickets();
+  }, [fetchTickets]);
+
+  const saveTicket = useCallback(async (messages, rating = null, feedback = '', extraData = {}) => {
     const lastConfidence = [...messages]
       .reverse()
       .find((message) => message.role === 'assistant' && message.confidence)?.confidence || null;
@@ -52,39 +74,49 @@ export function useChatHistory(userId) {
     };
 
     // Save to PostgreSQL DB
-    fetch(buildApiUrl('/api/tickets'), {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(newTicket),
-    }).catch((err) => console.error('Error saving ticket to DB:', err));
+    try {
+      await fetch(buildApiUrl('/api/tickets'), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newTicket),
+      });
+      fetchTickets();
+    } catch (err) {
+      console.error('Error saving ticket to DB:', err);
+    }
 
-    setTickets((previousTickets) => {
-      const updatedTickets = [newTicket, ...previousTickets];
-      const key = getStorageKey(userId);
-      writeLocalJson(key, updatedTickets);
-      return updatedTickets;
-    });
+    // Save fallback to LocalStorage
+    const key = getStorageKey(userId);
+    const local = readLocalJson(key, []);
+    writeLocalJson(key, [newTicket, ...local]);
 
     return newTicket.id;
-  }, [userId]);
+  }, [userId, fetchTickets]);
 
-  const updateTickets = useCallback((updatedTickets) => {
+  const updateTickets = useCallback(async (updatedTickets) => {
     setTickets(updatedTickets);
     const key = getStorageKey(userId);
     writeLocalJson(key, updatedTickets);
 
     // Save all updated tickets to PostgreSQL DB
-    updatedTickets.forEach((ticket) => {
-      fetch(buildApiUrl('/api/tickets'), {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          ...ticket,
-          ownerId: userId || 'anon',
-        }),
-      }).catch((err) => console.error('Error updating ticket in DB:', err));
-    });
-  }, [userId]);
+    try {
+      await Promise.all(
+        updatedTickets.map((ticket) =>
+          fetch(buildApiUrl('/api/tickets'), {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              ...ticket,
+              ownerId: userId || 'anon',
+            }),
+          })
+        )
+      );
+      fetchTickets();
+    } catch (err) {
+      console.error('Error updating tickets in DB:', err);
+    }
+  }, [userId, fetchTickets]);
 
   const clearTickets = useCallback(() => {
     const key = getStorageKey(userId);
@@ -92,5 +124,5 @@ export function useChatHistory(userId) {
     setTickets([]);
   }, [userId]);
 
-  return { tickets, saveTicket, updateTickets, clearTickets };
+  return { tickets, loading, reload: fetchTickets, saveTicket, updateTickets, clearTickets };
 }

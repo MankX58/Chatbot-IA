@@ -42,11 +42,18 @@ function StatusBadge({ status }) {
   );
 }
 
-export default function TicketsPanel({ tickets, onClear }) {
+export default function TicketsPanel({ tickets, onClear, onSendStudentMessage }) {
   const [selected, setSelected] = useState(null);
+  const [studentMsg, setStudentMsg] = useState('');
 
   if (selected) {
     const ticket = tickets.find((item) => item.id === selected);
+
+    const handleSend = () => {
+      if (!studentMsg.trim() || !onSendStudentMessage) return;
+      onSendStudentMessage(ticket.id, studentMsg.trim());
+      setStudentMsg('');
+    };
 
     return (
       <main className="flex min-h-0 flex-1 flex-col gap-0 overflow-y-auto p-4 sm:p-6">
@@ -74,14 +81,14 @@ export default function TicketsPanel({ tickets, onClear }) {
               className={`flex max-w-[92%] flex-col sm:max-w-[80%] ${message.role === 'user' ? 'self-end items-end' : 'self-start items-start'}`}
             >
               <span className="mb-1 text-[11px] font-semibold uppercase tracking-[0.06em] text-neutral-400">
-                {message.role === 'user' ? 'Tu' : 'Asistente'}
+                {message.role === 'user' ? 'Tu' : message.agentName ? `Soporte (${message.agentName})` : 'Asistente'}
               </span>
               <div className={`rounded-xl px-3.5 py-2.5 text-sm leading-relaxed ${message.role === 'user' ? 'bg-[#fb2c36] text-white' : 'bg-neutral-100 text-neutral-700'}`}>
                 {message.content.split('\n').map((line, lineIndex) => (
                   <p key={lineIndex} className={lineIndex > 0 ? 'mt-1' : ''}>{line}</p>
                 ))}
               </div>
-              {message.role === 'assistant' && (
+              {message.role === 'assistant' && message.confidence && (
                 <div className="mt-2">
                   <ConfidenceBadge confidence={message.confidence} />
                 </div>
@@ -89,6 +96,27 @@ export default function TicketsPanel({ tickets, onClear }) {
             </div>
           ))}
         </div>
+
+        {(ticket.status === 'escalated' || ticket.status === 'in_progress') && (
+          <div className="mt-4 border-t border-t-neutral-200 pt-4 flex gap-2">
+            <input
+              type="text"
+              placeholder="Escribe un mensaje para soporte..."
+              className="flex-1 rounded-xl border border-neutral-200 px-4 py-2.5 text-sm outline-none focus:border-[#fb2c36]"
+              value={studentMsg}
+              onChange={(e) => setStudentMsg(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') handleSend();
+              }}
+            />
+            <button
+              onClick={handleSend}
+              className="rounded-xl bg-[#fb2c36] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[#d62029]"
+            >
+              Enviar
+            </button>
+          </div>
+        )}
 
         {ticket.supportResponses?.length > 0 && (
           <div className="mt-2 border-t border-t-neutral-200 pt-4">

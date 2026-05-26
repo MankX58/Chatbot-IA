@@ -70,6 +70,15 @@ export function useSupportTickets() {
       const updatedTicket = {
         ...localTicket,
         status: nextStatus,
+        messages: [
+          ...(localTicket.messages || []),
+          {
+            role: 'assistant',
+            content: response.body,
+            timestamp: response.createdAt,
+            agentName: response.agentName,
+          },
+        ],
         supportResponses: [...(localTicket.supportResponses || []), response],
       };
 

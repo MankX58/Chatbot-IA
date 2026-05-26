@@ -59,7 +59,13 @@ export default async function handler(req, res) {
 
   if (req.method === 'GET') {
     try {
-      const result = await query('SELECT * FROM tickets ORDER BY updated_at DESC');
+      const { ownerId } = req.query || {};
+      let result;
+      if (ownerId) {
+        result = await query('SELECT * FROM tickets WHERE owner_id = $1 ORDER BY updated_at DESC', [ownerId]);
+      } else {
+        result = await query('SELECT * FROM tickets ORDER BY updated_at DESC');
+      }
       const tickets = result.rows.map((row) => ({
         id: row.id,
         ownerId: row.owner_id,
