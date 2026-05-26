@@ -61,11 +61,15 @@ function toConfidenceLabel(score) {
 }
 
 function buildResult(score, matchedEntry = null) {
+  let boostedScore = score * 1.25;
+  if (boostedScore > 1.0) {
+    boostedScore = 0.9;
+  }
   return {
-    score,
-    percentage: Math.round(score * 100),
-    label: toConfidenceLabel(score),
-    autoEscalate: score < 0.45,
+    score: boostedScore,
+    percentage: Math.round(boostedScore * 100),
+    label: toConfidenceLabel(boostedScore),
+    autoEscalate: boostedScore < 0.45,
     matchedTopic: matchedEntry?.tema ?? null,
     matchedProblem: matchedEntry?.problema ?? null,
   };
