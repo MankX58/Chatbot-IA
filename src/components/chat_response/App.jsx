@@ -30,7 +30,9 @@ export default function ChatMain() {
   const availableSections = getAvailableSections(userRoles);
   const roleLabel = getPrimaryRoleLabel(userRoles);
 
-  const [activeSection, setActiveSection] = useState(APP_SECTIONS.CHAT);
+  const [activeSection, setActiveSection] = useState(() => {
+    return availableSections.length > 0 ? availableSections[0] : APP_SECTIONS.CHAT;
+  });
   const [messages, setMessages] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [breadcrumb, setBreadcrumb] = useState('');
@@ -40,9 +42,11 @@ export default function ChatMain() {
 
   useEffect(() => {
     if (!isSectionAvailable(activeSection, userRoles)) {
-      setActiveSection(APP_SECTIONS.CHAT);
+      if (availableSections.length > 0) {
+        setActiveSection(availableSections[0]);
+      }
     }
-  }, [activeSection, userRoles]);
+  }, [activeSection, userRoles, availableSections]);
 
   const handleSend = useCallback(
     async (text) => {
@@ -178,7 +182,7 @@ export default function ChatMain() {
           availableSections={availableSections}
           roleLabel={roleLabel}
         />
-        {activeSection === APP_SECTIONS.CHAT && (
+        {activeSection === APP_SECTIONS.CHAT && isSectionAvailable(APP_SECTIONS.CHAT, userRoles) && (
           <ChatArea
             messages={messages}
             onSend={handleSend}
@@ -192,7 +196,7 @@ export default function ChatMain() {
             breadcrumb={breadcrumb}
           />
         )}
-        {activeSection === APP_SECTIONS.TICKETS && (
+        {activeSection === APP_SECTIONS.TICKETS && isSectionAvailable(APP_SECTIONS.TICKETS, userRoles) && (
           <TicketsPanel
             tickets={tickets}
             onClear={handleClearTickets}
