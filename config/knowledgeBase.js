@@ -341,98 +341,118 @@ Egresados de la UdeM tienen descuentos especiales.`,
   // ── Soporte tecnológico institucional ────────────────────────────
   {
     tema: 'Correo Institucional',
-    problema: 'No puedo acceder a mi correo institucional',
-    solucion: `Para problemas con el correo institucional (@soyudemedellin.edu.co):
-1. Verifica que estás usando tu correo correcto: tu_usuario@soyudemedellin.edu.co
-2. Si olvidaste la contraseña, ve a la página de recuperación de Microsoft (outlook.com) y selecciona "Olvidé mi contraseña"
-3. Si el problema persiste, contacta a la mesa de servicios en: soporte@udemedellin.edu.co o llama al (604) 590 4500 ext. soporte.
-4. El correo institucional funciona con Microsoft 365 (Outlook).`,
+    problema: 'No puedo acceder a mi correo institucional o recuperar contraseña',
+    solucion: `Para el correo institucional (@soyudemedellin.edu.co para estudiantes y egresados):
+1. Acceso: Se ingresa a través del portal de Microsoft 365 (outlook.com o office.com).
+2. Autogestión de contraseña: Si la olvidaste o está bloqueada, ingresa al portal de recuperación oficial de Microsoft en: http://aka.ms/sspr?whr=udem.edu.co. Deberás resolver un CAPTCHA y usar tus métodos de verificación registrados (como mensaje de texto, correo alternativo o la app Microsoft Authenticator).
+3. Beneficio Office 365: Tienes acceso a descargar e instalar Office 365 gratis hasta en 5 dispositivos personales desde office.com iniciando sesión con tu cuenta institucional.
+4. Soporte técnico: Si no logras restablecerla, contacta al Chat Teo UdeMedellín (L-V de 8 a.m. a 12 m. y de 2 p.m. a 6 p.m.; sábados de 8 a.m. a 4 p.m.) o diligencia el formulario de soporte de correo en el sitio web de la universidad. Para docentes y colaboradores, el soporte se realiza mediante la mesa de servicio SUSI.`,
   },
   {
     tema: 'Acceso LMS',
     problema: 'No puedo ingresar al LMS Canvas o plataforma virtual',
-    solucion: `Para problemas de acceso al LMS (Canvas):
-1. Ingresa a canvas.udemedellin.edu.co
-2. Usa tu correo institucional (@soyudemedellin.edu.co) y la misma contraseña del correo
-3. Si olvidaste la contraseña, usa la opción "¿Olvidaste tu contraseña?" en Canvas
-4. Verifica que tu matrícula esté activa para el semestre actual
-5. Si el problema persiste, contacta a soporte: (604) 590 4500 o soporte@udemedellin.edu.co`,
+    solucion: `Para acceder al LMS Canvas de la Universidad de Medellín:
+1. Enlace oficial: Ingresa directamente a canvas.udemedellin.edu.co
+2. Credenciales: Escribe tu correo electrónico institucional completo (@soyudemedellin.edu.co) y la misma contraseña de tu correo.
+3. Recuperación: Si olvidaste tus credenciales, debes restaurar la contraseña del correo institucional desde http://aka.ms/sspr?whr=udem.edu.co ya que están vinculadas.
+4. Validación: Asegúrate de estar matriculado financieramente en el semestre actual. Si eres estudiante nuevo, el acceso se activa al inicio de las clases.
+5. Soporte: Escribe a soporte@udemedellin.edu.co o comunícate al (604) 590 4500.`,
   },
   {
     tema: 'Internet Institucional',
-    problema: 'No me conecta al WiFi de la universidad',
-    solucion: `Para conectarte a la red WiFi institucional:
-1. Selecciona la red "UdeM" o "UdeM-Estudiantes" desde tu dispositivo
-2. Ingresa tu usuario (@soyudemedellin.edu.co) y contraseña institucional
-3. Si no recuerdas las credenciales, recupera tu contraseña en el portal de autoservicio
-4. Asegúrate de que tu dispositivo esté registrado en el sistema
-5. Para soporte técnico en campus: dirígete a la oficina de Soporte Tecnológico o llama al (604) 590 4500`,
+    problema: 'Cómo conectarse al WiFi SoyUdeMedellín y Porterías',
+    solucion: `Para conectarte a la red inalámbrica dentro del campus:
+1. Red principal: Selecciona la red WiFi llamada "SoyUdeMedellín" en tu dispositivo.
+2. Términos de uso: Acepta los términos de exención de responsabilidad que se abren automáticamente en el navegador.
+3. Credenciales: Introduce tu usuario de correo institucional SIN el dominio (ejemplo: si tu correo es pperez@soyudemedellin.edu.co, ingresa únicamente "pperez") y tu contraseña institucional de correo.
+4. Red de Porterías: La universidad dispone de la red WiFi "Porterías" sin contraseña, diseñada exclusivamente para abrir la app móvil y generar el código QR de acceso al campus si no cuentas con datos móviles.`,
   },
   {
     tema: 'SIGAA',
-    problema: 'Problemas con el SIGAA o autoservicio estudiantil',
-    solucion: `El SIGAA (Sistema de Información para la Gestión Académica y Administrativa) es el portal de autoservicio estudiantil de la UdeM.
-Funciones principales: inscripción de materias, consulta de notas, horarios, certificados, paz y salvo.
-Si tienes problemas:
-1. Ingresa con tu usuario y contraseña institucional
-2. Si el problema es técnico, llama al (604) 590 4500
-3. Para trámites académicos: dirígete a Admisiones y Registro (SARA)`,
+    problema: 'Cómo ingresar al portal estudiantil de servicios en línea',
+    solucion: `El portal de servicios académicos en línea de la UdeM permite la consulta de notas, prematrícula, inscripción de materias y peticiones:
+1. Acceso: Ingresa a la página oficial udemedellin.edu.co, ve a la sección Estudiantes > Pregrado (o Posgrado) > Servicios en línea > Consultas y servicios.
+2. Credenciales por defecto: El usuario es tu número de documento de identidad (sin puntos ni comas). La clave inicial por defecto es tu fecha de nacimiento en formato dd/mm/aaaa (con barras diagonales). Se recomienda cambiarla al primer ingreso.
+3. Trámites: Inscripción y ajustes de materias se realizan en las fechas publicadas en el calendario de matrículas de la oficina de Admisiones y Registro (SARA).
+4. Soporte académico: Si requieres asistencia con notas o cupos de materias, comunícate con el asistente de tu facultad o llama al (604) 590 4500.`,
   },
   {
     tema: 'Software Institucional',
-    problema: 'Cómo acceder al software académico de la universidad',
-    solucion: `La Universidad de Medellín ofrece licencias de software para estudiantes:
-- Microsoft Office 365 (Word, Excel, PowerPoint, Teams) — gratuito con tu correo institucional
-- Acceso a laboratorios de software especializado en campus
-- Algunos programas de ingeniería tienen acceso a MATLAB, AutoCAD y otros
-Para solicitar acceso a software adicional, contacta a Soporte Tecnológico: (604) 590 4500`,
+    problema: 'Cómo acceder al software académico y licencias estudiantiles',
+    solucion: `La Universidad de Medellín ofrece diversos beneficios de software para estudiantes activos:
+1. Microsoft 365: Acceso gratuito a Teams, Word, Excel, PowerPoint y OneDrive (1 TB de almacenamiento) ingresando a office.com con tu correo institucional.
+2. Software especializado: Acceso a herramientas como AutoCAD, MATLAB, SPSS y software específico de diseño o ingeniería en los computadores de los laboratorios del campus.
+3. Para solicitar ayuda técnica con licencias o accesos en laboratorios, comunícate con la Dirección de Transformación Digital y TI al (604) 590 4500.`,
   },
   {
     tema: 'Servicios Estudiantiles',
-    problema: 'Servicios disponibles para estudiantes',
-    solucion: `La Universidad de Medellín ofrece los siguientes servicios a estudiantes:
-- Biblioteca central (física y digital, 24/7 online)
-- Laboratorios especializados por facultad
-- Centro de idiomas (inglés, francés, portugués)
-- Bienestar universitario (psicología, nutrición, deporte)
-- Consultorio jurídico gratuito
-- Centro de emprendimiento e innovación
-- Gestión de prácticas y empleabilidad
-- Servicios de salud en campus
-- Transporte universitario (rutas especiales)`,
+    problema: 'Qué servicios generales ofrece Bienestar Universitario',
+    solucion: `El área de Bienestar Universitario de la Universidad de Medellín promueve el desarrollo integral a través de:
+1. Salud (Bloque 2, piso 1): Consultas médicas generales, odontología, enfermería y asesorías en planificación familiar. Son gratuitas (algunos insumos odontológicos mínimos pueden tener costo).
+2. Apoyo Psicosocial: Acompañamiento psicológico y psicopedagógico individual para estudiantes que lo requieran (especialmente en procesos de adaptación y becados).
+3. Fomento Deportivo: Escuelas de formación en disciplinas individuales y grupales, torneos internos y gimnasio en campus.
+4. Fomento Artístico y Cultural: Talleres y grupos artísticos de danza, teatro, música y artes plásticas abiertos para toda la comunidad.
+5. Citas médicas/odontología: L-V de 8 a.m. a 12 m. y de 1 p.m. a 5 p.m. por correo a: grupo_salud@udemedellin.edu.co (medicina/enfermería) y odontologia@udemedellin.edu.co (odontología).`,
   },
   {
     tema: 'Biblioteca',
-    problema: 'Cómo usar los servicios de la biblioteca',
-    solucion: `La Biblioteca de la Universidad de Medellín ofrece:
-- Bases de datos digitales (Scopus, Web of Science, Springer, entre otras)
-- Préstamo de libros físicos y digitales
-- Salas de estudio y trabajo grupal
-- Acceso a recursos 24/7 con carné estudiantil
-Para acceder digitalmente: portal.udemedellin.edu.co con tu usuario institucional.
-Horario físico: consulta en biblioteca.udemedellin.edu.co`,
+    problema: 'Servicios, bases de datos y horarios de la Biblioteca Eduardo Fernández Botero',
+    solucion: `La Biblioteca "Eduardo Fernández Botero" apoya los procesos académicos y científicos de la universidad:
+1. Horario de atención: Lunes a viernes de 6:00 a.m. a 6:00 p.m.
+2. Servicios: Préstamo de libros físicos, préstamo interbibliotecario con otras universidades de la región, salas de estudio grupales e individuales, capacitaciones en normas de citación (APA, IEEE, etc.) y gestores bibliográficos.
+3. Recursos digitales: Acceso a bases de datos científicas de alto impacto (Scopus, ScienceDirect, Springer, e-books, etc.) ingresando a través del portal de la biblioteca con tus credenciales de correo institucional.
+4. Contacto: Teléfono (604) 590 4500 ext. 11416.`,
+  },
+  {
+    tema: 'Carné Estudiantil',
+    problema: 'Cómo obtener el carné de estudiante digital e ingresar al campus',
+    solucion: `La Universidad de Medellín cuenta con identificación 100% digital a través de su aplicación oficial:
+1. Descarga la aplicación oficial "UdeMedellín" en las tiendas App Store (iOS), Play Store (Android) o AppGallery (Huawei). El logo es una letra 'U' blanca sobre fondo rojo.
+2. Inicia sesión con tu correo institucional (@soyudemedellin.edu.co) y tu contraseña institucional de Microsoft.
+3. Una vez autenticado, verás tu carné virtual con foto y un código QR dinámico. Haz clic en el código QR para ampliarlo y escanearlo en los torniquetes de las porterías de acceso y salida del campus.
+4. Si tienes problemas, escribe a sop_appudemedellin@udemedellin.edu.co o dirígete a la oficina de Admisiones y Registro en el Bloque Administrativo.`,
+  },
+  {
+    tema: 'Emprendimiento',
+    problema: 'Asesoría para emprendedores en el Centro de Desarrollo Empresarial (CDE)',
+    solucion: `El Centro de la Innovación y el Desarrollo Empresarial (CDE) de la UdeM apoya las iniciativas emprendedoras:
+1. Ubicación: Bloque 15, oficina 103.
+2. Horario: Lunes a viernes de 8:00 a.m. a 12:00 m. y de 2:00 p.m. a 6:00 p.m.
+3. Servicios: Mentorías personalizadas, estructuración de modelos de negocio, asesoría en propiedad intelectual, vinculación al ecosistema de emprendimiento regional e innovación social y tecnológica.
+4. Abierto a estudiantes, egresados y personal administrativo que deseen formular su idea de negocio o formalizar su startup.`,
+  },
+  {
+    tema: 'Pagos y Financiación',
+    problema: 'Cómo pagar la matrícula, convenios bancarios y créditos ICETEX',
+    solucion: `La Tesorería de la Universidad de Medellín cuenta con múltiples opciones para el pago de matrículas:
+1. Pago en línea (PSE): A través del portal oficial app.udem.edu.co/PagosEnLinea/ usando tarjeta de débito o crédito.
+2. Convenios bancarios en sucursales físicas:
+   - Bancolombia: Convenio 87015.
+   - Banco Caja Social: Convenio 15887315.
+   * La referencia de pago siempre es el número de documento de identidad del estudiante. Es necesario enviar el soporte de pago a tesoreria@udemedellin.edu.co.
+3. Créditos ICETEX: El estudiante gestiona la renovación o solicitud nueva directamente en el portal del ICETEX, firma el formato de actualización de datos y lo presenta junto con la prematricula en la oficina de Coordinación ICETEX de la UdeM en las fechas estipuladas. Si queda un saldo restante, se cancela por PSE o bancos.`,
   },
   {
     tema: 'Investigación',
     problema: 'Investigación y grupos de investigación en la universidad',
     solucion: `La Universidad de Medellín cuenta con:
-- Más de 30 grupos de investigación registrados en Minciencias
-- Centro de Investigación (CIDI)
-- Semilleros de investigación por facultad
-- Revistas científicas indexadas propias
-- Proyectos de investigación aplicada con empresas y el Estado
+- Más de 30 grupos de investigación registrados en Minciencias.
+- Centro de Investigación (CIDI).
+- Semilleros de investigación por facultad.
+- Revistas científicas indexadas propias.
+- Proyectos de investigación aplicada con empresas y el Estado.
 Para participar: contacta al CIDI o consulta con tu director de programa.`,
   },
   {
     tema: 'Internacionalización',
     problema: 'Intercambios y movilidad internacional',
     solucion: `La Universidad de Medellín ofrece:
-- Más de 100 convenios con universidades internacionales
-- Programas de intercambio estudiantil (homologación de materias)
-- Doble titulación con algunas universidades aliadas
-- Movilidad de docentes e investigadores
-- Cursos y programas en inglés
-Para más información: Oficina de Relaciones Internacionales, (604) 590 4500`,
+- Más de 100 convenios con universidades internacionales.
+- Programas de intercambio estudiantil (homologación de materias).
+- Doble titulación con algunas universidades aliadas.
+- Movilidad de docentes e investigadores.
+- Cursos y programas en inglés.
+Para más información: Oficina de Relaciones Internacionales, (604) 590 4500.`,
   },
 
   // ── SNIES y datos adicionales de pregrados ────────────────────────

@@ -17,35 +17,13 @@
 - Dashboard administrativo local con metricas y deteccion de no resueltos.
 - Paneles de soporte y analitica visibles segun rol del usuario autenticado.
 - Aprendizaje automatico implementado (RF-12): el sistema aprende de respuestas de agentes y calificaciones positivas de usuarios.
-- Base de conocimiento expandida: incluye todos los pregrados y posgrados (especializaciones, maestrias, doctorados) de la UdeM con SNIES, duraciones y perfiles.
+- Base de conocimiento expandida: incluye todos los pregrados, posgrados (especializaciones, maestrías, doctorados), soporte tecnológico (correo institucional @soyudemedellin.edu.co, LMS Canvas, WiFi SoyUdeMedellín y Porterías), portal estudiantil (SIGAA), carné digital (App UdeMedellín), bienestar universitario (salud, psicología, deportes), Biblioteca Eduardo Fernández Botero, Centro de Desarrollo Empresarial (CDE) y opciones de pago/financiación (Bancolombia, Banco Caja Social, PSE, ICETEX).
 - Panel de Configuracion eliminado del frontend para todos los roles.
 
 ## Cambios recientes
-- Se elimino el doble montaje de `Auth0Provider`.
-- Se centralizo la configuracion de Auth0 en `config/auth0Config.js`.
-- Se agrego `ProtectedRoute`.
-- La API key de DeepSeek ya no vive en el navegador; ahora se lee solo en el backend con `process.env.DEEPSEEK_API_KEY`.
-- Se agrego `services/confidenceService.js` para cubrir la primera iteracion de `RF-03`.
-- Se extendio el ticket para guardar `lastConfidence` y la confianza por mensaje.
-- Se agrego `src/services/ticketBoardService.js` para agregacion, prioridad, estados y metricas.
-- Se agregaron `AgentPanel.jsx` y `AnalyticsPanel.jsx`.
-- Se agregaron `api/chat.js` y `api/health.js` para correr DeepSeek del lado servidor con `DEEPSEEK_API_KEY`.
-- `ConfigPanel.jsx` ya no solicita secretos del usuario y ahora valida el estado del backend.
-- El frontend puede apuntar a un backend remoto con `VITE_API_BASE_URL` cuando se pruebe fuera de Vercel.
-- Se agrego `src/utils/accessControl.js` para habilitar secciones por rol usando claims de Auth0 o listas de correos configurables.
-- Se agregaron fallbacks para correos de prueba por rol en `src/utils/accessControl.js` (admin, agente, usuario).
-- Se agrego el archivo `.env.local` configurando localmente las variables de Auth0 y los correos de prueba.
-- Se implemento RF-12: aprendizaje automatico. Se creo `src/services/learningService.js` que extrae conocimiento de tickets resueltos por agentes y chats con rating >= 4.
-- Se modifico `services/deepseekService.js` para enviar `learnedEntries` al backend en cada peticion de chat.
-- Se modifico `api/chat.js` para recibir, validar (max 20 entradas) y pasar `learnedEntries` al system prompt.
-- Se modifico `config/systemPrompt.js` para aceptar conocimiento aprendido e inyectarlo dinamicamente en la seccion `CONOCIMIENTO APRENDIDO`.
-- Se modifico `AgentPanel.jsx` con un checkbox (marcado por defecto) que permite al agente guardar su respuesta como conocimiento del chatbot.
-- Se agrego la clave `learnedKnowledge` en `src/utils/browserStorage.js`.
-- La tanda actual quedo validada con `npm.cmd run build` y `npm.cmd run lint`.
-- Se expandio `config/knowledgeBase.js`: ahora contiene todos los pregrados (27 programas con SNIES, semestres, perfil egresado y campo laboral), todas las especializaciones, maestrias y doctorados de la UdeM.
+- Se actualizó la base de conocimiento en `config/knowledgeBase.js` con información hiper-precisa y verificada de la Universidad de Medellín: soporte de correo institucional (recuperación vía aka.ms/sspr), Canvas (canvas.udemedellin.edu.co), red WiFi SoyUdeMedellín (conexión sin dominio) y red WiFi Porterías, acceso al SIGAA con identificación y fecha de nacimiento, carné digital a través de la App UdeMedellín (soporte vía sop_appudemedellin@udemedellin.edu.co), citas de salud gratuitas en el Bloque 2 (psicología, medicina y odontología), Biblioteca Eduardo Fernández Botero (horarios y extensión 11416), Centro de Desarrollo Empresarial (Bloque 15-103) y convenios de pago de Tesorería (Bancolombia 87015 y Caja Social 15887315).
 - Se elimino el Panel de Configuracion del frontend para todos los roles: se quito de `accessControl.js`, `Header.jsx`, `Sidebar.jsx`, `App.jsx` y se actualizo el texto descriptivo del Sidebar para usuarios.
 - La tanda actual quedo validada con `npm.cmd run build` y `npm.cmd run lint`.
-
 
 ## Siguientes pasos recomendados (Pendientes de Implementación)
 1. **Persistencia y Backend Real (Afecta RF-04, RF-05, RF-07, RF-13, RF-14):** Migrar todo el almacenamiento de tickets, estados y métricas que actualmente reside en `localStorage` hacia una base de datos central (MongoDB/PostgreSQL/Supabase). Esto es crítico para que el Agente y Administrador vean los datos de los usuarios.
