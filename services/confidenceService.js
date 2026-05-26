@@ -61,7 +61,7 @@ function toConfidenceLabel(score) {
 }
 
 function buildResult(score, matchedEntry = null) {
-  let boostedScore = score * 1.25;
+  let boostedScore = score * 1.35;
   if (boostedScore > 1.0) {
     boostedScore = 0.9;
   }
