@@ -89,3 +89,27 @@ export function removeLocalItem(key) {
     // Ignore storage quota and privacy mode errors.
   }
 }
+
+export function listLocalKeys() {
+  const storage = getStorage('localStorage');
+
+  if (!storage) {
+    return [];
+  }
+
+  try {
+    const keys = [];
+
+    for (let index = 0; index < storage.length; index += 1) {
+      const key = storage.key(index);
+
+      if (key) {
+        keys.push(key);
+      }
+    }
+
+    return keys;
+  } catch {
+    return [];
+  }
+}

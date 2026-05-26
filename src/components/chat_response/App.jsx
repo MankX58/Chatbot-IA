@@ -5,6 +5,8 @@ import Sidebar from './Sidebar';
 import ChatArea from './ChatArea';
 import TicketsPanel from './TicketsPanel';
 import ConfigPanel from './ConfigPanel';
+import AgentPanel from './AgentPanel';
+import AnalyticsPanel from './AnalyticsPanel';
 import Footer from './Footer';
 import { sendMessage } from '../../../services/deepseekService';
 import { calculateResponseConfidence } from '../../../services/confidenceService';
@@ -96,10 +98,16 @@ export default function ChatMain() {
       messages,
       extraData.rating || null,
       extraData.feedback || '',
-      { ...extraData, breadcrumb }
+      {
+        ...extraData,
+        breadcrumb,
+        ownerId: userId || 'anon',
+        ownerName: user?.name || 'Usuario',
+        ownerEmail: user?.email || '',
+      }
     );
     setChatLocked(true);
-  }, [breadcrumb, chatLocked, messages, saveTicket]);
+  }, [breadcrumb, chatLocked, messages, saveTicket, user?.email, user?.name, userId]);
 
   const handleChatResolved = useCallback(({ rating, feedback }) => {
     saveChatToTickets({ rating, feedback, status: TICKET_STATUS.RESOLVED });
@@ -146,11 +154,13 @@ export default function ChatMain() {
             breadcrumb={breadcrumb}
           />
         )}
-        {activeSection === APP_SECTIONS.CONFIG && (
-          <ConfigPanel apiKey={apiKey} onApiKeyChange={handleApiKeyChange} />
-        )}
         {activeSection === APP_SECTIONS.TICKETS && (
           <TicketsPanel tickets={tickets} onClear={handleClearTickets} />
+        )}
+        {activeSection === APP_SECTIONS.AGENT && <AgentPanel />}
+        {activeSection === APP_SECTIONS.ANALYTICS && <AnalyticsPanel />}
+        {activeSection === APP_SECTIONS.CONFIG && (
+          <ConfigPanel apiKey={apiKey} onApiKeyChange={handleApiKeyChange} />
         )}
       </div>
       <Footer />

@@ -1,12 +1,15 @@
 export const APP_SECTIONS = {
   CHAT: 'chat',
   TICKETS: 'tickets',
+  AGENT: 'agent',
+  ANALYTICS: 'analytics',
   CONFIG: 'config',
 };
 
 export const TICKET_STATUS = {
   RESOLVED: 'resolved',
   ESCALATED: 'escalated',
+  IN_PROGRESS: 'in_progress',
   CLOSED: 'closed',
 };
 
@@ -74,6 +77,36 @@ export function getConfidenceTone(confidence) {
   if (score >= 0.75) return 'high';
   if (score >= 0.45) return 'medium';
   return 'low';
+}
+
+export function formatStatus(status) {
+  switch (status) {
+    case TICKET_STATUS.ESCALATED:
+      return 'Escalado';
+    case TICKET_STATUS.IN_PROGRESS:
+      return 'En gestion';
+    case TICKET_STATUS.RESOLVED:
+      return 'Resuelto';
+    case TICKET_STATUS.CLOSED:
+      return 'Cerrado';
+    default:
+      return 'Pendiente';
+  }
+}
+
+export function getStatusTone(status) {
+  switch (status) {
+    case TICKET_STATUS.ESCALATED:
+      return 'blue';
+    case TICKET_STATUS.IN_PROGRESS:
+      return 'amber';
+    case TICKET_STATUS.RESOLVED:
+      return 'green';
+    case TICKET_STATUS.CLOSED:
+      return 'neutral';
+    default:
+      return 'neutral';
+  }
 }
 
 export function detectBreadcrumb(text) {
