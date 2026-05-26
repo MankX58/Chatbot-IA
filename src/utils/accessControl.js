@@ -20,8 +20,11 @@ function parseEnvEmailList(value) {
     .filter(Boolean);
 }
 
-const AGENT_EMAILS = parseEnvEmailList(import.meta.env.VITE_SUPPORT_AGENT_EMAILS || '');
-const ADMIN_EMAILS = parseEnvEmailList(import.meta.env.VITE_ADMIN_EMAILS || '');
+const DEFAULT_AGENT_EMAILS = 'agente@udemedellin.edu.co,agente@ejemplo.com,soporte@udemedellin.edu.co';
+const DEFAULT_ADMIN_EMAILS = 'admin@udemedellin.edu.co,admin@ejemplo.com,coordinador@udemedellin.edu.co';
+
+const AGENT_EMAILS = parseEnvEmailList(import.meta.env.VITE_SUPPORT_AGENT_EMAILS || DEFAULT_AGENT_EMAILS);
+const ADMIN_EMAILS = parseEnvEmailList(import.meta.env.VITE_ADMIN_EMAILS || DEFAULT_ADMIN_EMAILS);
 
 export function getUserRoles(user) {
   const userEmail = user?.email?.toLowerCase() || '';

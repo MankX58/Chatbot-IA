@@ -5,11 +5,14 @@ Este archivo mantiene un registro de tareas importantes, cambios significativos,
 ## 2026-05-26
 - **Cambios realizados:** Se agrego soporte para `VITE_API_BASE_URL`, permitiendo que el frontend local consuma el backend serverless desplegado en Vercel cuando no se use el mismo origen.
 - **Cambios realizados:** Se introdujo control de acceso por rol en la UI. Los paneles de soporte y metricas ahora se habilitan segun claims de Auth0 o listas de correos configuradas con `VITE_SUPPORT_AGENT_EMAILS` y `VITE_ADMIN_EMAILS`.
-- **Validacion realizada:** `npm.cmd run build` y `npm.cmd run lint` ejecutados con resultado correcto despues de migrar la capa serverless y el control de acceso.
+- **Cambios realizados:** Se agregaron correos fallbacks en `src/utils/accessControl.js` para agentes y administradores, facilitando pruebas de roles sin necesidad de configurar variables de entorno.
+- **Cambios realizados:** Se creo el archivo `.env.local` configurando las variables de Auth0 y los correos de prueba funcionales para cada rol.
+- **Validacion realizada:** `npm.cmd run build` y `npm.cmd run lint` ejecutados con resultado correcto tras migrar la capa serverless, el control de acceso y tras agregar los correos de prueba locales.
 - **Decisiones tecnicas:**
   - Mantener `/api/chat` y `/api/health` como endpoints por defecto y permitir override solo mediante `VITE_API_BASE_URL`.
   - Habilitar CORS y peticiones `OPTIONS` en las funciones serverless para facilitar pruebas desde origenes distintos durante desarrollo.
   - Resolver la primera capa de autorizacion en frontend usando `VITE_AUTH0_ROLES_CLAIM` y listas de correos por entorno mientras no exista un backend de roles institucional.
+  - Establecer fallbacks integrados de correos para `agente@ejemplo.com` y `admin@ejemplo.com` para garantizar funcionalidad fuera de la caja en pruebas locales.
 
 ## 2026-05-25
 - **Cambios realizados:** Se unifico la integracion de Auth0 en un solo `Auth0Provider`, se protegio la ruta `/home` con `ProtectedRoute`, se movio la API key de DeepSeek de `localStorage` a `sessionStorage`, y se implemento un calculo inicial de confianza para las respuestas del chatbot con visualizacion en chat y tickets.

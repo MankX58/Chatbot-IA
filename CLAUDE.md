@@ -30,7 +30,10 @@
 - `ConfigPanel.jsx` ya no solicita secretos del usuario y ahora valida el estado del backend.
 - El frontend puede apuntar a un backend remoto con `VITE_API_BASE_URL` cuando se pruebe fuera de Vercel.
 - Se agrego `src/utils/accessControl.js` para habilitar secciones por rol usando claims de Auth0 o listas de correos configurables.
+- Se agregaron fallbacks para correos de prueba por rol en `src/utils/accessControl.js` (admin, agente, usuario).
+- Se agrego el archivo `.env.local` configurando localmente las variables de Auth0 y los correos de prueba.
 - La tanda actual quedo validada con `npm.cmd run build` y `npm.cmd run lint`.
+
 
 ## Siguientes pasos recomendados
 1. Probar el flujo completo con dependencias instaladas y corregir cualquier regresion visual.
