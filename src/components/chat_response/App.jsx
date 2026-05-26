@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
 import Header from './Header';
 import Sidebar from './Sidebar';
@@ -10,7 +10,6 @@ import AnalyticsPanel from './AnalyticsPanel';
 import Footer from './Footer';
 import { sendMessage } from '../../../services/deepseekService';
 import { calculateResponseConfidence } from '../../../services/confidenceService';
-import { buildSystemPrompt } from '../../../config/systemPrompt';
 import {
   APP_SECTIONS,
   createMessage,
@@ -18,34 +17,36 @@ import {
   TICKET_STATUS,
 } from './chatUtils';
 import { useChatHistory } from '../../hooks/useChatHistory';
-import { STORAGE_KEYS, readSessionItem, writeSessionItem } from '../../utils/browserStorage';
+import {
+  getAvailableSections,
+  getPrimaryRoleLabel,
+  getUserRoles,
+  isSectionAvailable,
+} from '../../utils/accessControl';
 
 export default function ChatMain() {
   const { user } = useAuth0();
   const userId = user?.sub;
+  const userRoles = getUserRoles(user);
+  const availableSections = getAvailableSections(userRoles);
+  const roleLabel = getPrimaryRoleLabel(userRoles);
 
   const [activeSection, setActiveSection] = useState(APP_SECTIONS.CHAT);
   const [messages, setMessages] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [apiKey, setApiKey] = useState(() => readSessionItem(STORAGE_KEYS.apiKey, ''));
   const [breadcrumb, setBreadcrumb] = useState('');
   const [chatLocked, setChatLocked] = useState(false);
 
   const { tickets, saveTicket, clearTickets } = useChatHistory(userId);
 
-  const handleApiKeyChange = useCallback((key) => {
-    const trimmedKey = key.trim();
-    setApiKey(trimmedKey);
-    writeSessionItem(STORAGE_KEYS.apiKey, trimmedKey);
-  }, []);
+  useEffect(() => {
+    if (!isSectionAvailable(activeSection, userRoles)) {
+      setActiveSection(APP_SECTIONS.CHAT);
+    }
+  }, [activeSection, userRoles]);
 
   const handleSend = useCallback(
     async (text) => {
-      if (!apiKey) {
-        setActiveSection(APP_SECTIONS.CONFIG);
-        return;
-      }
-
       const userMessage = createMessage('user', text);
       setMessages((previousMessages) => [...previousMessages, userMessage]);
       setIsLoading(true);
@@ -56,8 +57,7 @@ export default function ChatMain() {
 
       try {
         const history = [...messages, userMessage].map(({ role, content }) => ({ role, content }));
-        const systemPrompt = buildSystemPrompt();
-        const reply = await sendMessage(apiKey, history, systemPrompt);
+        const reply = await sendMessage(history);
         const confidence = calculateResponseConfidence(text, reply);
         const assistantMessage = createMessage('assistant', reply, {
           showFeedback: true,
@@ -69,7 +69,7 @@ export default function ChatMain() {
       } catch (error) {
         const errorMessage = createMessage(
           'assistant',
-          `Error al conectar con DeepSeek: ${error.message}\n\nVerifica tu API key en la seccion de configuracion.`,
+          `Error al conectar con el servicio de IA: ${error.message}\n\nRevisa la configuracion del backend en la seccion de configuracion.`,
           { showFeedback: false }
         );
 
@@ -78,7 +78,7 @@ export default function ChatMain() {
         setIsLoading(false);
       }
     },
-    [apiKey, breadcrumb, messages]
+    [breadcrumb, messages]
   );
 
   const handleFeedback = useCallback((messageId, isPositive) => {
@@ -132,14 +132,28 @@ export default function ChatMain() {
   }, [clearTickets]);
 
   const handleSectionChange = useCallback((section) => {
+    if (!isSectionAvailable(section, userRoles)) {
+      return;
+    }
+
     setActiveSection(section);
-  }, []);
+  }, [userRoles]);
 
   return (
     <div className="flex min-h-dvh flex-col overflow-x-hidden bg-[#f8f9fa]">
-      <Header activeSection={activeSection} onNavigate={handleSectionChange} />
+      <Header
+        activeSection={activeSection}
+        onNavigate={handleSectionChange}
+        availableSections={availableSections}
+        roleLabel={roleLabel}
+      />
       <div className="flex min-h-0 flex-1 flex-col overflow-hidden md:flex-row">
-        <Sidebar activeSection={activeSection} onSectionChange={handleSectionChange} />
+        <Sidebar
+          activeSection={activeSection}
+          onSectionChange={handleSectionChange}
+          availableSections={availableSections}
+          roleLabel={roleLabel}
+        />
         {activeSection === APP_SECTIONS.CHAT && (
           <ChatArea
             messages={messages}
@@ -157,11 +171,13 @@ export default function ChatMain() {
         {activeSection === APP_SECTIONS.TICKETS && (
           <TicketsPanel tickets={tickets} onClear={handleClearTickets} />
         )}
-        {activeSection === APP_SECTIONS.AGENT && <AgentPanel />}
-        {activeSection === APP_SECTIONS.ANALYTICS && <AnalyticsPanel />}
-        {activeSection === APP_SECTIONS.CONFIG && (
-          <ConfigPanel apiKey={apiKey} onApiKeyChange={handleApiKeyChange} />
+        {activeSection === APP_SECTIONS.AGENT && isSectionAvailable(APP_SECTIONS.AGENT, userRoles) && (
+          <AgentPanel />
         )}
+        {activeSection === APP_SECTIONS.ANALYTICS && isSectionAvailable(APP_SECTIONS.ANALYTICS, userRoles) && (
+          <AnalyticsPanel />
+        )}
+        {activeSection === APP_SECTIONS.CONFIG && <ConfigPanel />}
       </div>
       <Footer />
     </div>

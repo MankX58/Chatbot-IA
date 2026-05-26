@@ -44,7 +44,9 @@ const icons = {
   ),
 };
 
-export default function Sidebar({ activeSection, onSectionChange }) {
+export default function Sidebar({ activeSection, onSectionChange, availableSections, roleLabel }) {
+  const menuItems = MENU_ITEMS.filter((item) => availableSections.includes(item.id));
+
   return (
     <aside className="hidden w-72 min-w-72 flex-col border-r border-r-neutral-200 bg-white py-6 md:flex">
       <div className="border-b border-b-neutral-100 px-5 pb-6">
@@ -64,13 +66,15 @@ export default function Sidebar({ activeSection, onSectionChange }) {
         <div className="rounded-2xl bg-neutral-50 p-4">
           <p className="text-xs font-semibold uppercase tracking-[0.08em] text-neutral-400">Cobertura actual</p>
           <p className="mt-2 text-sm leading-relaxed text-neutral-600">
-            Chat, tickets, gestion de soporte y metricas locales para validar el flujo del MVP.
+            {roleLabel === 'Administrador' && 'Chat, tickets, soporte y metricas habilitados para gestion integral del MVP.'}
+            {roleLabel === 'Agente de soporte' && 'Chat, tickets y panel operativo habilitados para gestionar casos escalados.'}
+            {roleLabel === 'Usuario' && 'Chat, seguimiento de tickets y configuracion del servicio disponibles para el usuario final.'}
           </p>
         </div>
       </div>
 
       <nav className="flex flex-1 flex-col gap-1 px-3 py-4">
-        {MENU_ITEMS.map((item) => (
+        {menuItems.map((item) => (
           <button
             key={item.id}
             className={`flex w-full items-center gap-2.5 rounded-[10px] border-0 px-4 py-3 text-left text-[0.88rem] font-medium transition-all duration-200 ${

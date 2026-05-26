@@ -1,40 +1,32 @@
-const DEEPSEEK_API_URL = 'https://api.deepseek.com/chat/completions';
+import { buildApiUrl } from '../config/runtimeConfig.js';
+
+const CHAT_API_URL = buildApiUrl('/api/chat');
 
 /**
- * Envía un mensaje a la API de DeepSeek y retorna la respuesta del asistente.
+ * Envia el historial del chat al backend para que la llamada a DeepSeek se haga
+ * en el lado servidor usando las variables de entorno configuradas en Vercel.
  *
- * @param {string} apiKey  - API key de DeepSeek
- * @param {Array}  messages - Historial de mensajes [{role, content}, ...]
- * @param {string} systemPrompt - Prompt del sistema con guardrails y KB
- * @returns {Promise<string>} Respuesta del asistente
+ * @param {Array<{role: string, content: string}>} messages
+ * @returns {Promise<string>}
  */
-export async function sendMessage(apiKey, messages, systemPrompt) {
-    const body = {
-        model: 'deepseek-chat',
-        messages: [
-            { role: 'system', content: systemPrompt },
-            ...messages,
-        ],
-        temperature: 0.4,
-        max_tokens: 1024,
-    };
+export async function sendMessage(messages) {
+  const response = await fetch(CHAT_API_URL, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ messages }),
+  });
 
-    const response = await fetch(DEEPSEEK_API_URL, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${apiKey}`,
-        },
-        body: JSON.stringify(body),
-    });
+  if (!response.ok) {
+    const errorPayload = await response.json().catch(() => ({}));
+    throw new Error(
+      errorPayload?.error ||
+      errorPayload?.details ||
+      `Error ${response.status}: ${response.statusText}`
+    );
+  }
 
-    if (!response.ok) {
-        const err = await response.json().catch(() => ({}));
-        throw new Error(
-            err?.error?.message || `Error ${response.status}: ${response.statusText}`
-        );
-    }
-
-    const data = await response.json();
-    return data.choices?.[0]?.message?.content ?? 'Sin respuesta del modelo.';
+  const data = await response.json();
+  return data.reply ?? 'Sin respuesta del modelo.';
 }

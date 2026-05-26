@@ -1,5 +1,4 @@
 export const STORAGE_KEYS = {
-  apiKey: 'deepseek_api_key',
   chatTickets: 'chat_tickets',
 };
 

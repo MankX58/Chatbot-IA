@@ -10,13 +10,14 @@ const MENU_ITEMS = [
   { id: APP_SECTIONS.CONFIG, label: 'Configuracion' },
 ];
 
-export default function Header({ activeSection, onNavigate }) {
+export default function Header({ activeSection, onNavigate, availableSections, roleLabel }) {
   const { user, logout } = useAuth0();
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [showNavMenu, setShowNavMenu] = useState(false);
   const [navMenuMounted, setNavMenuMounted] = useState(false);
   const userMenuRef = useRef(null);
   const navMenuRef = useRef(null);
+  const menuItems = MENU_ITEMS.filter((item) => availableSections.includes(item.id));
 
   const handleLogout = () => {
     setShowUserMenu(false);
@@ -132,7 +133,7 @@ export default function Header({ activeSection, onNavigate }) {
           </div>
           <div className="max-h-[45dvh] overflow-y-auto p-3">
             <div className="flex flex-col gap-2">
-              {MENU_ITEMS.map((item) => (
+              {menuItems.map((item) => (
                 <button
                   key={item.id}
                   className={`flex w-full items-center rounded-2xl px-4 py-4 text-left text-sm font-semibold transition ${
@@ -190,6 +191,9 @@ export default function Header({ activeSection, onNavigate }) {
                   <div>
                     <p className="m-0 text-[0.95rem] font-bold text-[#1a1a2e]">{user.name || 'Usuario'}</p>
                     <p className="m-0 mt-1 break-all text-xs text-neutral-500">{user.email}</p>
+                    <p className="m-0 mt-2 inline-flex rounded-full bg-white px-2 py-1 text-[11px] font-semibold uppercase tracking-[0.08em] text-[#B71C1C]">
+                      {roleLabel}
+                    </p>
                   </div>
                 </div>
                 <div className="h-px bg-neutral-200" />
