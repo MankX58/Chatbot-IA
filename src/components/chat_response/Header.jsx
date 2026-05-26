@@ -7,7 +7,6 @@ const MENU_ITEMS = [
   { id: APP_SECTIONS.TICKETS, label: 'Tickets' },
   { id: APP_SECTIONS.AGENT, label: 'Soporte' },
   { id: APP_SECTIONS.ANALYTICS, label: 'Metricas' },
-  { id: APP_SECTIONS.CONFIG, label: 'Configuracion' },
 ];
 
 export default function Header({ activeSection, onNavigate, availableSections, roleLabel }) {

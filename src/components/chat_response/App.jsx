@@ -4,7 +4,6 @@ import Header from './Header';
 import Sidebar from './Sidebar';
 import ChatArea from './ChatArea';
 import TicketsPanel from './TicketsPanel';
-import ConfigPanel from './ConfigPanel';
 import AgentPanel from './AgentPanel';
 import AnalyticsPanel from './AnalyticsPanel';
 import Footer from './Footer';
@@ -177,7 +176,6 @@ export default function ChatMain() {
         {activeSection === APP_SECTIONS.ANALYTICS && isSectionAvailable(APP_SECTIONS.ANALYTICS, userRoles) && (
           <AnalyticsPanel />
         )}
-        {activeSection === APP_SECTIONS.CONFIG && <ConfigPanel />}
       </div>
       <Footer />
     </div>

@@ -3,6 +3,14 @@
 Este archivo mantiene un registro de tareas importantes, cambios significativos, decisiones tecnicas y pendientes del proyecto.
 
 ## 2026-05-26
+- **Cambios realizados:** Se expandio masivamente `config/knowledgeBase.js`. La base paso de ~30 entradas estaticas a mas de 60 entradas detalladas con los 27 pregrados de la UdeM (con codigo SNIES, duracion en semestres, perfil del egresado y campo laboral), mas de 30 especializaciones por facultad, todas las maestrias y los 4 doctorados institucionales. La informacion fue obtenida consultando el sitio oficial de la UdeM y el SNIES del Ministerio de Educacion Nacional.
+- **Cambios realizados:** Se elimino el Panel de Configuracion del frontend para todos los roles. Se modificaron: `src/utils/accessControl.js` (se quito APP_SECTIONS.CONFIG del arreglo de secciones disponibles), `src/components/chat_response/Header.jsx` (se quito el item de menu), `src/components/chat_response/Sidebar.jsx` (se quito el item y se actualizo el texto para el rol Usuario), `src/components/chat_response/App.jsx` (se quito el import de ConfigPanel y su render condicional).
+- **Validacion realizada:** `npm.cmd run build` y `npm.cmd run lint` ejecutados con resultado correcto tras expandir la base de conocimiento y eliminar el panel de configuracion.
+- **Decisiones tecnicas:**
+  - El Panel de Configuracion fue eliminado porque su funcion principal era mostrar el estado del backend (DEEPSEEK_API_KEY) y esa informacion no aporta valor al usuario final ni al agente; el backend se valida internamente.
+  - Se priorizo incluir SNIES oficiales en la base de conocimiento para que el bot pueda responder preguntas precisas sobre codigos de programa y modalidades.
+  - Se verifico con fuentes oficiales que Investigacion Criminal Virtual (SNIES 101996) es el unico pregrado 100% virtual de la UdeM, dato importante para usuarios que no pueden asistir presencialmente.
+
 - **Cambios realizados:** Se agrego soporte para `VITE_API_BASE_URL`, permitiendo que el frontend local consuma el backend serverless desplegado en Vercel cuando no se use el mismo origen.
 - **Cambios realizados:** Se introdujo control de acceso por rol en la UI. Los paneles de soporte y metricas ahora se habilitan segun claims de Auth0 o listas de correos configuradas con `VITE_SUPPORT_AGENT_EMAILS` y `VITE_ADMIN_EMAILS`.
 - **Cambios realizados:** Se agregaron correos fallbacks en `src/utils/accessControl.js` para agentes y administradores, facilitando pruebas de roles sin necesidad de configurar variables de entorno.

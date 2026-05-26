@@ -5,7 +5,6 @@ const MENU_ITEMS = [
   { id: APP_SECTIONS.TICKETS, label: 'Mis tickets', icon: 'ticket' },
   { id: APP_SECTIONS.AGENT, label: 'Panel de soporte', icon: 'support' },
   { id: APP_SECTIONS.ANALYTICS, label: 'Dashboard', icon: 'analytics' },
-  { id: APP_SECTIONS.CONFIG, label: 'Configuracion', icon: 'config' },
 ];
 
 const icons = {
@@ -68,7 +67,7 @@ export default function Sidebar({ activeSection, onSectionChange, availableSecti
           <p className="mt-2 text-sm leading-relaxed text-neutral-600">
             {roleLabel === 'Administrador' && 'Chat, tickets, soporte y metricas habilitados para gestion integral del MVP.'}
             {roleLabel === 'Agente de soporte' && 'Chat, tickets y panel operativo habilitados para gestionar casos escalados.'}
-            {roleLabel === 'Usuario' && 'Chat, seguimiento de tickets y configuracion del servicio disponibles para el usuario final.'}
+            {roleLabel === 'Usuario' && 'Chat y seguimiento de tickets disponibles para el usuario final.'}
           </p>
         </div>
       </div>

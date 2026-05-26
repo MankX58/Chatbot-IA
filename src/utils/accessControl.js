@@ -62,15 +62,14 @@ export function getAvailableSections(roles = []) {
   const sections = [
     APP_SECTIONS.CHAT,
     APP_SECTIONS.TICKETS,
-    APP_SECTIONS.CONFIG,
   ];
 
   if (normalizedRoles.has(USER_ROLES.AGENT) || normalizedRoles.has(USER_ROLES.ADMIN)) {
-    sections.splice(2, 0, APP_SECTIONS.AGENT);
+    sections.push(APP_SECTIONS.AGENT);
   }
 
   if (normalizedRoles.has(USER_ROLES.ADMIN)) {
-    sections.splice(sections.length - 1, 0, APP_SECTIONS.ANALYTICS);
+    sections.push(APP_SECTIONS.ANALYTICS);
   }
 
   return sections;

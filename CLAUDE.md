@@ -17,6 +17,8 @@
 - Dashboard administrativo local con metricas y deteccion de no resueltos.
 - Paneles de soporte y analitica visibles segun rol del usuario autenticado.
 - Aprendizaje automatico implementado (RF-12): el sistema aprende de respuestas de agentes y calificaciones positivas de usuarios.
+- Base de conocimiento expandida: incluye todos los pregrados y posgrados (especializaciones, maestrias, doctorados) de la UdeM con SNIES, duraciones y perfiles.
+- Panel de Configuracion eliminado del frontend para todos los roles.
 
 ## Cambios recientes
 - Se elimino el doble montaje de `Auth0Provider`.
@@ -39,6 +41,9 @@
 - Se modifico `config/systemPrompt.js` para aceptar conocimiento aprendido e inyectarlo dinamicamente en la seccion `CONOCIMIENTO APRENDIDO`.
 - Se modifico `AgentPanel.jsx` con un checkbox (marcado por defecto) que permite al agente guardar su respuesta como conocimiento del chatbot.
 - Se agrego la clave `learnedKnowledge` en `src/utils/browserStorage.js`.
+- La tanda actual quedo validada con `npm.cmd run build` y `npm.cmd run lint`.
+- Se expandio `config/knowledgeBase.js`: ahora contiene todos los pregrados (27 programas con SNIES, semestres, perfil egresado y campo laboral), todas las especializaciones, maestrias y doctorados de la UdeM.
+- Se elimino el Panel de Configuracion del frontend para todos los roles: se quito de `accessControl.js`, `Header.jsx`, `Sidebar.jsx`, `App.jsx` y se actualizo el texto descriptivo del Sidebar para usuarios.
 - La tanda actual quedo validada con `npm.cmd run build` y `npm.cmd run lint`.
 
 
