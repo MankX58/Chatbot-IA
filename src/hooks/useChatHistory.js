@@ -1,4 +1,5 @@
 import { useState, useCallback, useEffect } from 'react';
+import { buildApiUrl } from '../../config/runtimeConfig';
 import {
   STORAGE_KEYS,
   readLocalJson,
@@ -51,7 +52,7 @@ export function useChatHistory(userId) {
     };
 
     // Save to PostgreSQL DB
-    fetch('/api/tickets', {
+    fetch(buildApiUrl('/api/tickets'), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(newTicket),
@@ -74,7 +75,7 @@ export function useChatHistory(userId) {
 
     // Save all updated tickets to PostgreSQL DB
     updatedTickets.forEach((ticket) => {
-      fetch('/api/tickets', {
+      fetch(buildApiUrl('/api/tickets'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

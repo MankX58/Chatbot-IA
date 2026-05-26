@@ -1,4 +1,5 @@
 import { collectStoredTickets } from './ticketBoardService';
+import { buildApiUrl } from '../../config/runtimeConfig';
 import {
   STORAGE_KEYS,
   readLocalJson,
@@ -117,7 +118,7 @@ export function addLearnedEntry(tema, problema, solucion) {
   };
 
   // Save to PostgreSQL DB via api endpoint
-  fetch('/api/knowledge', {
+  fetch(buildApiUrl('/api/knowledge'), {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(newEntry),

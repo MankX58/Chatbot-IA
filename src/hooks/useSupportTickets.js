@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
+import { buildApiUrl } from '../../config/runtimeConfig';
 import {
   deriveTicketPriority,
   isUnresolvedTicket,
@@ -13,7 +14,7 @@ export function useSupportTickets() {
   const fetchTickets = useCallback(async () => {
     setLoading(true);
     try {
-      const response = await fetch('/api/tickets');
+      const response = await fetch(buildApiUrl('/api/tickets'));
       if (!response.ok) {
         throw new Error('No se pudieron obtener los tickets');
       }
@@ -48,7 +49,7 @@ export function useSupportTickets() {
         status,
       };
 
-      fetch('/api/tickets', {
+      fetch(buildApiUrl('/api/tickets'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(updatedTicket),
@@ -72,7 +73,7 @@ export function useSupportTickets() {
         supportResponses: [...(localTicket.supportResponses || []), response],
       };
 
-      fetch('/api/tickets', {
+      fetch(buildApiUrl('/api/tickets'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(updatedTicket),
