@@ -116,6 +116,13 @@ export function addLearnedEntry(tema, problema, solucion) {
     addedAt: new Date().toISOString(),
   };
 
+  // Save to PostgreSQL DB via api endpoint
+  fetch('/api/knowledge', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(newEntry),
+  }).catch((err) => console.error('Error saving learned knowledge to DB:', err));
+
   const updated = [newEntry, ...current].slice(0, MAX_LEARNED_ENTRIES);
   writeLocalJson(STORAGE_KEYS.learnedKnowledge, updated);
 

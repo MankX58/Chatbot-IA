@@ -1,4 +1,5 @@
 import { buildSystemPrompt } from '../config/systemPrompt.js';
+import { query } from './db.js';
 
 const DEEPSEEK_API_URL = 'https://api.deepseek.com/chat/completions';
 const DEFAULT_MODEL = 'deepseek-chat';
@@ -61,17 +62,29 @@ export default async function handler(req, res) {
         .map(({ role, content }) => ({ role, content }))
     : [];
 
-  const learnedEntries = Array.isArray(parsedBody?.learnedEntries)
-    ? parsedBody.learnedEntries
-        .filter(
-          (entry) =>
-            typeof entry?.tema === 'string' &&
-            typeof entry?.problema === 'string' &&
-            typeof entry?.solucion === 'string'
-        )
-        .map(({ tema, problema, solucion }) => ({ tema, problema, solucion }))
-        .slice(0, 20)
-    : [];
+  let learnedEntries = [];
+  try {
+    const dbResult = await query('SELECT tema, problema, solucion FROM learned_kb ORDER BY id DESC LIMIT 20');
+    if (dbResult.rows.length > 0) {
+      learnedEntries = dbResult.rows.map(({ tema, problema, solucion }) => ({ tema, problema, solucion }));
+    }
+  } catch (error) {
+    console.error('Error fetching knowledge from DB:', error);
+  }
+
+  if (learnedEntries.length === 0) {
+    learnedEntries = Array.isArray(parsedBody?.learnedEntries)
+      ? parsedBody.learnedEntries
+          .filter(
+            (entry) =>
+              typeof entry?.tema === 'string' &&
+              typeof entry?.problema === 'string' &&
+              typeof entry?.solucion === 'string'
+          )
+          .map(({ tema, problema, solucion }) => ({ tema, problema, solucion }))
+          .slice(0, 20)
+      : [];
+  }
 
   if (!messages.length) {
     return createJsonResponse(res, 400, {

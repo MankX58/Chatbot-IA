@@ -30,7 +30,8 @@ export function useChatHistory(userId) {
       .find((message) => message.role === 'assistant' && message.confidence)?.confidence || null;
 
     const newTicket = {
-      id: Date.now(),
+      id: String(Date.now()),
+      ownerId: userId || 'anon',
       date: new Date().toISOString(),
       preview: messages.find((message) => message.role === 'user')?.content?.slice(0, 80) || 'Sin mensaje',
       breadcrumb: extraData.breadcrumb || '',
@@ -49,6 +50,13 @@ export function useChatHistory(userId) {
       ...extraData,
     };
 
+    // Save to PostgreSQL DB
+    fetch('/api/tickets', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(newTicket),
+    }).catch((err) => console.error('Error saving ticket to DB:', err));
+
     setTickets((previousTickets) => {
       const updatedTickets = [newTicket, ...previousTickets];
       const key = getStorageKey(userId);
@@ -63,6 +71,18 @@ export function useChatHistory(userId) {
     setTickets(updatedTickets);
     const key = getStorageKey(userId);
     writeLocalJson(key, updatedTickets);
+
+    // Save all updated tickets to PostgreSQL DB
+    updatedTickets.forEach((ticket) => {
+      fetch('/api/tickets', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          ...ticket,
+          ownerId: userId || 'anon',
+        }),
+      }).catch((err) => console.error('Error updating ticket in DB:', err));
+    });
   }, [userId]);
 
   const clearTickets = useCallback(() => {

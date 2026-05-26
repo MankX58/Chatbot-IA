@@ -1,0 +1,134 @@
+import { query } from './db.js';
+
+function applyCorsHeaders(req, res) {
+  const origin = req.headers.origin || '*';
+  res.setHeader('Access-Control-Allow-Origin', origin);
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+}
+
+function createJsonResponse(res, statusCode, payload) {
+  res.status(statusCode).setHeader('Content-Type', 'application/json');
+  res.send(JSON.stringify(payload));
+}
+
+function parseRequestBody(body) {
+  if (!body) return {};
+  if (typeof body === 'string') {
+    try {
+      return JSON.parse(body);
+    } catch {
+      return {};
+    }
+  }
+  return body;
+}
+
+// Auto-initialize table if it doesn't exist
+async function ensureTableExists() {
+  await query(`
+    CREATE TABLE IF NOT EXISTS tickets (
+        id VARCHAR(100) PRIMARY KEY,
+        owner_id VARCHAR(100) NOT NULL,
+        status VARCHAR(50) NOT NULL,
+        rating INTEGER,
+        last_confidence JSONB,
+        breadcrumb VARCHAR(255),
+        preview TEXT,
+        messages JSONB DEFAULT '[]'::jsonb,
+        support_responses JSONB DEFAULT '[]'::jsonb,
+        created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+    );
+  `);
+}
+
+export default async function handler(req, res) {
+  applyCorsHeaders(req, res);
+
+  if (req.method === 'OPTIONS') {
+    return res.status(204).end();
+  }
+
+  try {
+    await ensureTableExists();
+  } catch (err) {
+    console.error('Error al inicializar tabla de tickets:', err);
+    return createJsonResponse(res, 500, { error: 'Error al conectar con la base de datos.' });
+  }
+
+  if (req.method === 'GET') {
+    try {
+      const result = await query('SELECT * FROM tickets ORDER BY updated_at DESC');
+      const tickets = result.rows.map((row) => ({
+        id: row.id,
+        ownerId: row.owner_id,
+        status: row.status,
+        rating: row.rating,
+        lastConfidence: row.last_confidence,
+        breadcrumb: row.breadcrumb,
+        preview: row.preview,
+        messages: row.messages,
+        supportResponses: row.support_responses,
+        date: row.created_at,
+        updatedAt: row.updated_at,
+      }));
+      return createJsonResponse(res, 200, tickets);
+    } catch (error) {
+      return createJsonResponse(res, 500, { error: error.message });
+    }
+  }
+
+  if (req.method === 'POST') {
+    try {
+      const body = parseRequestBody(req.body);
+      const {
+        id,
+        ownerId,
+        status,
+        rating,
+        lastConfidence,
+        breadcrumb,
+        preview,
+        messages,
+        supportResponses,
+      } = body;
+
+      if (!id) {
+        return createJsonResponse(res, 400, { error: 'Falta el campo id.' });
+      }
+
+      await query(
+        `INSERT INTO tickets (id, owner_id, status, rating, last_confidence, breadcrumb, preview, messages, support_responses, updated_at)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, CURRENT_TIMESTAMP)
+         ON CONFLICT (id) DO UPDATE SET
+           status = EXCLUDED.status,
+           rating = EXCLUDED.rating,
+           last_confidence = EXCLUDED.last_confidence,
+           breadcrumb = EXCLUDED.breadcrumb,
+           preview = EXCLUDED.preview,
+           messages = EXCLUDED.messages,
+           support_responses = EXCLUDED.support_responses,
+           updated_at = CURRENT_TIMESTAMP`,
+        [
+          id,
+          ownerId || 'anon',
+          status || 'ESCALADO',
+          rating || null,
+          lastConfidence ? JSON.stringify(lastConfidence) : null,
+          breadcrumb || null,
+          preview || null,
+          messages ? JSON.stringify(messages) : '[]',
+          supportResponses ? JSON.stringify(supportResponses) : '[]',
+        ]
+      );
+
+      return createJsonResponse(res, 200, { success: true });
+    } catch (error) {
+      return createJsonResponse(res, 500, { error: error.message });
+    }
+  }
+
+  res.setHeader('Allow', 'GET, POST');
+  return createJsonResponse(res, 405, { error: 'Método no permitido.' });
+}
