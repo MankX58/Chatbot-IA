@@ -98,21 +98,32 @@ export default function AgentPanel() {
 
   const selectedTicket =
     filteredTickets.find((t) => t.id === selectedId) ||
-    filteredTickets[0] ||
+    (window.innerWidth >= 768 ? filteredTickets[0] : null) ||
     null;
 
   // Stats
   const activeCount  = tickets.filter((t) => [TICKET_STATUS.ESCALATED, TICKET_STATUS.IN_PROGRESS].includes(t.status)).length;
   const highPriCount = tickets.filter((t) => t.priority === 'Alta' && [TICKET_STATUS.ESCALATED, TICKET_STATUS.IN_PROGRESS].includes(t.status)).length;
 
+  // Auto-select first ticket on desktop if none selected
+  useEffect(() => {
+    if (window.innerWidth >= 768 && !selectedId && filteredTickets.length > 0) {
+      setSelectedId(filteredTickets[0].id);
+    }
+  }, [filteredTickets, selectedId]);
+
   // Auto-open details when there's escalation context
   useEffect(() => {
-    setDetailsOpen(Boolean(selectedTicket?.escalationContext));
+    if (selectedTicket) {
+      setDetailsOpen(Boolean(selectedTicket.escalationContext));
+    }
   }, [selectedTicket?.id]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [selectedTicket?.messages]);
+    if (selectedTicket) {
+      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [selectedTicket]);
 
   const handleStatusChange = (ticket, nextStatus) => {
     setTicketStatus(ticket.storageKey, ticket.id, nextStatus);
@@ -214,10 +225,10 @@ export default function AgentPanel() {
           </div>
         </div>
       ) : (
-        <div className="grid min-h-0 flex-1 overflow-hidden xl:grid-cols-[20rem_minmax(0,1fr)]">
+        <div className="flex flex-col min-h-0 flex-1 overflow-hidden md:grid md:grid-cols-[18rem_1fr] lg:grid-cols-[20rem_1fr]">
 
           {/* ── Ticket list ── */}
-          <section className="min-h-0 overflow-y-auto border-b border-neutral-200 bg-white xl:border-b-0 xl:border-r">
+          <section className={`min-h-0 overflow-y-auto border-b border-neutral-200 bg-white md:border-b-0 md:border-r ${selectedId ? 'hidden md:block' : 'block'}`}>
             <div className="px-4 py-3 sm:px-5">
               <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-neutral-400">
                 Casos · {filteredTickets.length}
@@ -263,13 +274,22 @@ export default function AgentPanel() {
           </section>
 
           {/* ── Case detail (chat view) ── */}
-          <section className="flex min-h-0 flex-col overflow-hidden bg-[#f8f9fa]">
+          <section className={`flex min-h-0 flex-col overflow-hidden bg-[#f8f9fa] ${!selectedId ? 'hidden md:flex' : 'flex'}`}>
             {selectedTicket ? (
               <>
                 {/* ── Compact case header ── */}
                 <div className="shrink-0 border-b border-neutral-200 bg-white">
                   {/* Always-visible top bar */}
                   <div className="flex items-center gap-3 px-4 py-2.5">
+                    <button
+                      onClick={() => setSelectedId(null)}
+                      className="flex h-8 w-8 shrink-0 cursor-pointer items-center justify-center rounded-lg border border-neutral-200 bg-white text-neutral-500 hover:border-[#B71C1C] hover:text-[#B71C1C] transition-colors md:hidden"
+                      title="Volver a la lista"
+                    >
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                        <polyline points="15 18 9 12 15 6" />
+                      </svg>
+                    </button>
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-1.5 flex-wrap">
                         <span className="text-[11px] font-bold uppercase tracking-[0.08em] text-[#B71C1C]">
@@ -349,6 +369,17 @@ export default function AgentPanel() {
                 {/* ── Messages (chat view) ── */}
                 <div className="flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto px-4 py-5 sm:px-6">
                   {(selectedTicket.messages || []).map((message, idx) => {
+                    if (message.role === 'context') {
+                      return (
+                        <div key={idx} className="my-2 self-center w-full max-w-[90%] rounded-xl border border-dashed border-[#B71C1C]/35 bg-white px-4 py-3 text-sm text-neutral-800 text-center shadow-sm">
+                          <span className="block text-[11px] font-bold uppercase tracking-[0.08em] text-[#B71C1C] mb-1">
+                            Contexto de Escalamiento del Usuario
+                          </span>
+                          <p className="italic text-neutral-600">"{message.content}"</p>
+                        </div>
+                      );
+                    }
+
                     const isUser  = message.role === 'user';
                     const isAgent = Boolean(message.agentName);
                     const rawName = selectedTicket.ownerName;

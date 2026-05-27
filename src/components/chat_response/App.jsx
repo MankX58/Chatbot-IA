@@ -121,8 +121,20 @@ export default function ChatMain() {
   const saveChatToTickets = useCallback((extraData = {}) => {
     if (chatLocked) return;
 
+    let finalMessages = [...messages];
+    if (extraData.escalationContext) {
+      const contextMsg = {
+        id: String(Date.now() + 1),
+        role: 'context',
+        content: extraData.escalationContext,
+        timestamp: new Date().toISOString(),
+      };
+      finalMessages.push(contextMsg);
+      setMessages(finalMessages);
+    }
+
     saveTicket(
-      messages,
+      finalMessages,
       extraData.rating || null,
       extraData.feedback || '',
       {

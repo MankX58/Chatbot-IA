@@ -179,6 +179,17 @@ export default function TicketsPanel({ tickets, onClear, onSendStudentMessage })
         {/* Messages */}
         <div className="flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto px-4 py-5 sm:px-6">
           {ticket.messages.map((message, index) => {
+            if (message.role === 'context') {
+              return (
+                <div key={index} className="my-2 self-center w-full max-w-[90%] rounded-xl border border-dashed border-[#B71C1C]/35 bg-white px-4 py-3 text-sm text-neutral-800 text-center shadow-sm">
+                  <span className="block text-[11px] font-bold uppercase tracking-[0.08em] text-[#B71C1C] mb-1">
+                    Contexto de Escalamiento a Soporte
+                  </span>
+                  <p className="italic text-neutral-600">"{message.content}"</p>
+                </div>
+              );
+            }
+
             const isUser  = message.role === 'user';
             const isAgent = message.role === 'support' || message.agentName;
             return (

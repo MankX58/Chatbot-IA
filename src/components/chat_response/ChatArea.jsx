@@ -19,6 +19,17 @@ function BotIcon() {
 }
 
 function MessageBubble({ message, onFeedback }) {
+  if (message.role === 'context') {
+    return (
+      <div className="my-2 self-center w-full max-w-[90%] rounded-xl border border-dashed border-[#D32F2F]/30 bg-[#fff5f5] px-4 py-3 text-sm text-neutral-800 text-center shadow-sm">
+        <span className="block text-[11px] font-bold uppercase tracking-[0.08em] text-[#D32F2F] mb-1">
+          Contexto de Escalamiento a Soporte
+        </span>
+        <p className="italic text-neutral-600">"{message.content}"</p>
+      </div>
+    );
+  }
+
   const isUser = message.role === 'user';
   const confidenceTone = getConfidenceTone(message.confidence);
   const confidenceClasses = {
