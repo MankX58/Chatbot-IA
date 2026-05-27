@@ -41,6 +41,9 @@ async function ensureTableExists() {
         updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
     );
   `);
+  // Add columns if they do not exist
+  await query(`ALTER TABLE tickets ADD COLUMN IF NOT EXISTS owner_name VARCHAR(255);`);
+  await query(`ALTER TABLE tickets ADD COLUMN IF NOT EXISTS owner_email VARCHAR(255);`);
 }
 
 export default async function handler(req, res) {
@@ -69,6 +72,8 @@ export default async function handler(req, res) {
       const tickets = result.rows.map((row) => ({
         id: row.id,
         ownerId: row.owner_id,
+        ownerName: row.owner_name,
+        ownerEmail: row.owner_email,
         status: row.status,
         rating: row.rating,
         lastConfidence: row.last_confidence,
@@ -91,6 +96,8 @@ export default async function handler(req, res) {
       const {
         id,
         ownerId,
+        ownerName,
+        ownerEmail,
         status,
         rating,
         lastConfidence,
@@ -105,9 +112,11 @@ export default async function handler(req, res) {
       }
 
       await query(
-        `INSERT INTO tickets (id, owner_id, status, rating, last_confidence, breadcrumb, preview, messages, support_responses, updated_at)
-         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, CURRENT_TIMESTAMP)
+        `INSERT INTO tickets (id, owner_id, owner_name, owner_email, status, rating, last_confidence, breadcrumb, preview, messages, support_responses, updated_at)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, CURRENT_TIMESTAMP)
          ON CONFLICT (id) DO UPDATE SET
+           owner_name = COALESCE(EXCLUDED.owner_name, tickets.owner_name),
+           owner_email = COALESCE(EXCLUDED.owner_email, tickets.owner_email),
            status = EXCLUDED.status,
            rating = EXCLUDED.rating,
            last_confidence = EXCLUDED.last_confidence,
@@ -119,6 +128,8 @@ export default async function handler(req, res) {
         [
           id,
           ownerId || 'anon',
+          ownerName || null,
+          ownerEmail || null,
           status || 'ESCALADO',
           rating || null,
           lastConfidence ? JSON.stringify(lastConfidence) : null,

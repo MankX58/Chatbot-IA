@@ -34,6 +34,26 @@ export default function ChatMain() {
     return availableSections.length > 0 ? availableSections[0] : APP_SECTIONS.CHAT;
   });
   const [messages, setMessages] = useState([]);
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(() => {
+    try {
+      const saved = localStorage.getItem('sidebar_collapsed');
+      return saved ? JSON.parse(saved) : false;
+    } catch {
+      return false;
+    }
+  });
+
+  const toggleSidebar = useCallback(() => {
+    setIsSidebarCollapsed((prev) => {
+      const next = !prev;
+      try {
+        localStorage.setItem('sidebar_collapsed', JSON.stringify(next));
+      } catch (err) {
+        console.error(err);
+      }
+      return next;
+    });
+  }, []);
   const [isLoading, setIsLoading] = useState(false);
   const [breadcrumb, setBreadcrumb] = useState('');
   const [chatLocked, setChatLocked] = useState(false);
@@ -114,7 +134,7 @@ export default function ChatMain() {
       }
     );
     setChatLocked(true);
-  }, [breadcrumb, chatLocked, messages, saveTicket, user?.email, user?.name, userId]);
+  }, [breadcrumb, chatLocked, messages, saveTicket, user?.email, user?.name, user?.nickname, userId]);
 
   const handleChatResolved = useCallback(({ rating, feedback }) => {
     saveChatToTickets({ rating, feedback, status: TICKET_STATUS.RESOLVED });
@@ -181,6 +201,8 @@ export default function ChatMain() {
           onSectionChange={handleSectionChange}
           availableSections={availableSections}
           roleLabel={roleLabel}
+          isCollapsed={isSidebarCollapsed}
+          onToggleCollapse={toggleSidebar}
         />
         {activeSection === APP_SECTIONS.CHAT && isSectionAvailable(APP_SECTIONS.CHAT, userRoles) && (
           <ChatArea

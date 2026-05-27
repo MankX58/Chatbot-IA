@@ -528,12 +528,12 @@ export default function ChatArea({
           </div>
         </div>
       ) : (
-        <form className="border-t border-t-neutral-200 bg-white px-4 py-4 sm:px-5" onSubmit={handleSubmit}>
-          <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+        <form className="border-t border-t-neutral-200 bg-white px-4 py-3.5 sm:px-5" onSubmit={handleSubmit}>
+          <div className="flex items-center gap-2">
             <input
               ref={inputRef}
               type="text"
-              className="flex-1 rounded-full border border-neutral-300 px-4 py-3 text-sm outline-none transition focus:border-[#D32F2F]"
+              className="flex-1 rounded-full border border-neutral-200 bg-neutral-50 hover:bg-neutral-100/50 focus:bg-white px-5 py-3 text-sm outline-none transition duration-200 focus:border-[#D32F2F] focus:shadow-sm"
               placeholder="Escribe tu mensaje aquí..."
               value={input}
               onChange={(e) => setInput(e.target.value)}
@@ -541,11 +541,11 @@ export default function ChatArea({
             />
             <button
               type="submit"
-              className="flex h-11 w-full cursor-pointer items-center justify-center rounded-[10px] border-0 bg-[#D32F2F] text-white transition hover:bg-[#9f2323] disabled:cursor-not-allowed disabled:bg-neutral-400 sm:w-11"
+              className="flex h-11 w-11 shrink-0 cursor-pointer items-center justify-center rounded-full border-0 bg-[#D32F2F] text-white shadow-sm transition hover:bg-[#9f2323] disabled:cursor-not-allowed disabled:bg-neutral-300"
               disabled={!input.trim() || isLoading}
               aria-label="Enviar mensaje"
             >
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" className="ml-0.5">
                 <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" />
               </svg>
             </button>

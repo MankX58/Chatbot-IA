@@ -149,11 +149,11 @@ export default function AgentPanel() {
     <main className="flex min-h-0 flex-1 flex-col overflow-hidden bg-[#f1f3f6]">
 
       {/* ── Agent identity header (always visible) ── */}
-      <div className="bg-gradient-to-r from-[#3d0000] to-[#7B1111] px-4 py-4 sm:px-6">
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/15">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2">
+      <div className="bg-gradient-to-r from-[#3d0000] to-[#7B1111] px-4 py-2.5 sm:px-6">
+        <div className="flex items-center justify-between gap-3">
+          <div className="flex items-center gap-2.5">
+            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-white/15">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2">
                 <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
                 <circle cx="9" cy="7" r="4" />
                 <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
@@ -161,18 +161,18 @@ export default function AgentPanel() {
               </svg>
             </div>
             <div>
-              <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-white/50">Panel de Agente</p>
-              <h1 className="text-base font-bold text-white">{user?.name || 'Agente de Soporte'}</h1>
+              <p className="text-[9px] font-semibold uppercase tracking-[0.12em] text-white/50 leading-none">Panel de Agente</p>
+              <h1 className="text-sm font-bold text-white mt-0.5 leading-none">{user?.name || 'Agente de Soporte'}</h1>
             </div>
           </div>
-          <div className="flex gap-2">
-            <div className="rounded-xl bg-white/10 px-3 py-2 text-center">
-              <p className="text-lg font-bold text-white">{activeCount}</p>
-              <p className="text-[10px] font-semibold uppercase tracking-wide text-white/50">Activos</p>
+          <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 rounded-lg bg-white/10 px-2.5 py-1">
+              <span className="text-xs font-bold text-white leading-none">{activeCount}</span>
+              <span className="text-[9px] font-semibold uppercase tracking-wide text-white/50 leading-none">Activos</span>
             </div>
-            <div className="rounded-xl bg-[#D32F2F]/30 px-3 py-2 text-center">
-              <p className="text-lg font-bold text-red-300">{highPriCount}</p>
-              <p className="text-[10px] font-semibold uppercase tracking-wide text-red-300/70">Alta prio.</p>
+            <div className="flex items-center gap-2 rounded-lg bg-[#D32F2F]/30 px-2.5 py-1">
+              <span className="text-xs font-bold text-red-300 leading-none">{highPriCount}</span>
+              <span className="text-[9px] font-semibold uppercase tracking-wide text-red-300/70 leading-none">Alta prio.</span>
             </div>
           </div>
         </div>
@@ -214,7 +214,7 @@ export default function AgentPanel() {
           </div>
         </div>
       ) : (
-        <div className="grid min-h-0 flex-1 overflow-hidden xl:grid-cols-[22rem_minmax(0,1fr)]">
+        <div className="grid min-h-0 flex-1 overflow-hidden xl:grid-cols-[20rem_minmax(0,1fr)]">
 
           {/* ── Ticket list ── */}
           <section className="min-h-0 overflow-y-auto border-b border-neutral-200 bg-white xl:border-b-0 xl:border-r">
@@ -244,7 +244,12 @@ export default function AgentPanel() {
                       <span className="shrink-0 text-[11px] text-neutral-400">{timeAgo(ticket.updatedAt || ticket.date)}</span>
                     </div>
                     <p className="mb-1 text-[12px] font-medium text-neutral-500 truncate">
-                      {ticket.ownerName || ticket.ownerEmail || 'Usuario'}
+                      {(() => {
+                        const n = ticket.ownerName;
+                        if (n && n !== 'Usuario') return n;
+                        if (ticket.ownerEmail) return ticket.ownerEmail.split('@')[0];
+                        return 'Usuario';
+                      })()}
                     </p>
                     <p className="mb-2.5 line-clamp-2 text-sm text-neutral-700">{ticket.preview}</p>
                     <div className="flex flex-wrap gap-1.5">
