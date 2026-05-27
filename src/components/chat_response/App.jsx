@@ -116,8 +116,8 @@ export default function ChatMain() {
     saveChatToTickets({ rating, feedback, status: TICKET_STATUS.RESOLVED });
   }, [saveChatToTickets]);
 
-  const handleChatEscalated = useCallback(({ escalationContext }) => {
-    saveChatToTickets({ status: TICKET_STATUS.ESCALATED, escalationContext });
+  const handleChatEscalated = useCallback(({ escalationContext, priority }) => {
+    saveChatToTickets({ status: TICKET_STATUS.ESCALATED, escalationContext, priority: priority || 'Media' });
   }, [saveChatToTickets]);
 
   const handleChatClosed = useCallback(() => {
