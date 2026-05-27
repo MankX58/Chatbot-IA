@@ -85,10 +85,7 @@ export default function AgentPanel() {
   const [detailsOpen,    setDetailsOpen]    = useState(false);
   const messagesEndRef = useRef(null);
 
-  // Auto-open details when there's escalation context
-  useEffect(() => {
-    setDetailsOpen(Boolean(selectedTicket?.escalationContext));
-  }, [selectedTicket?.id]); // eslint-disable-line react-hooks/exhaustive-deps
+  // Auto-open details when there's escalation context (moved below selectedTicket derivation)
 
   const filteredTickets = tickets.filter((ticket) => {
     const activeMatch =
@@ -107,6 +104,11 @@ export default function AgentPanel() {
   // Stats
   const activeCount  = tickets.filter((t) => [TICKET_STATUS.ESCALATED, TICKET_STATUS.IN_PROGRESS].includes(t.status)).length;
   const highPriCount = tickets.filter((t) => t.priority === 'Alta' && [TICKET_STATUS.ESCALATED, TICKET_STATUS.IN_PROGRESS].includes(t.status)).length;
+
+  // Auto-open details when there's escalation context
+  useEffect(() => {
+    setDetailsOpen(Boolean(selectedTicket?.escalationContext));
+  }, [selectedTicket?.id]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -310,7 +312,7 @@ export default function AgentPanel() {
                       )}
                       <div className="flex flex-wrap items-center justify-between gap-2">
                         <div className="flex items-center gap-3 text-xs text-neutral-500">
-                          <span><span className="font-semibold text-neutral-700">{selectedTicket.messages.length}</span> mensajes</span>
+                          <span><span className="font-semibold text-neutral-700">{(selectedTicket.messages || []).length}</span> mensajes</span>
                           <span>IA: <span className="font-semibold text-neutral-700">{formatConfidence(selectedTicket.lastConfidence)}</span></span>
                           <span className="text-neutral-400">{formatTicketDate(selectedTicket.updatedAt || selectedTicket.date)}</span>
                         </div>
@@ -341,7 +343,7 @@ export default function AgentPanel() {
 
                 {/* ── Messages (chat view) ── */}
                 <div className="flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto px-4 py-5 sm:px-6">
-                  {selectedTicket.messages.map((message, idx) => {
+                  {(selectedTicket.messages || []).map((message, idx) => {
                     const isUser  = message.role === 'user';
                     const isAgent = Boolean(message.agentName);
                     const rawName = selectedTicket.ownerName;
