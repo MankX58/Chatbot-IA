@@ -44,6 +44,8 @@ async function ensureTableExists() {
   // Add columns if they do not exist
   await query(`ALTER TABLE tickets ADD COLUMN IF NOT EXISTS owner_name VARCHAR(255);`);
   await query(`ALTER TABLE tickets ADD COLUMN IF NOT EXISTS owner_email VARCHAR(255);`);
+  await query(`ALTER TABLE tickets ADD COLUMN IF NOT EXISTS priority VARCHAR(50);`);
+  await query(`ALTER TABLE tickets ADD COLUMN IF NOT EXISTS escalation_context TEXT;`);
 }
 
 export default async function handler(req, res) {
@@ -81,6 +83,8 @@ export default async function handler(req, res) {
         preview: row.preview,
         messages: row.messages,
         supportResponses: row.support_responses,
+        priority: row.priority,
+        escalationContext: row.escalation_context,
         date: row.created_at,
         updatedAt: row.updated_at,
       }));
@@ -105,6 +109,8 @@ export default async function handler(req, res) {
         preview,
         messages,
         supportResponses,
+        priority,
+        escalationContext,
       } = body;
 
       if (!id) {
@@ -112,8 +118,8 @@ export default async function handler(req, res) {
       }
 
       await query(
-        `INSERT INTO tickets (id, owner_id, owner_name, owner_email, status, rating, last_confidence, breadcrumb, preview, messages, support_responses, updated_at)
-         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, CURRENT_TIMESTAMP)
+        `INSERT INTO tickets (id, owner_id, owner_name, owner_email, status, rating, last_confidence, breadcrumb, preview, messages, support_responses, priority, escalation_context, updated_at)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, CURRENT_TIMESTAMP)
          ON CONFLICT (id) DO UPDATE SET
            owner_name = COALESCE(EXCLUDED.owner_name, tickets.owner_name),
            owner_email = COALESCE(EXCLUDED.owner_email, tickets.owner_email),
@@ -124,6 +130,8 @@ export default async function handler(req, res) {
            preview = EXCLUDED.preview,
            messages = EXCLUDED.messages,
            support_responses = EXCLUDED.support_responses,
+           priority = COALESCE(EXCLUDED.priority, tickets.priority),
+           escalation_context = COALESCE(EXCLUDED.escalation_context, tickets.escalation_context),
            updated_at = CURRENT_TIMESTAMP`,
         [
           id,
@@ -137,6 +145,8 @@ export default async function handler(req, res) {
           preview || null,
           messages ? JSON.stringify(messages) : '[]',
           supportResponses ? JSON.stringify(supportResponses) : '[]',
+          priority || null,
+          escalationContext || null,
         ]
       );
 
