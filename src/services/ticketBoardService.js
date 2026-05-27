@@ -23,10 +23,14 @@ function extractConfidenceScore(confidence) {
 }
 
 export function deriveTicketPriority(ticket) {
-  let score = 0;
+  // If the user explicitly chose a priority when escalating, respect it
+  if (ticket.priority && ['Alta', 'Media', 'Baja'].includes(ticket.priority)) {
+    return ticket.priority;
+  }
 
+  // Fallback heuristic for tickets without an explicit priority
+  let score = 0;
   if (ticket.status === TICKET_STATUS.ESCALATED) score += 2;
-  if (ticket.status === TICKET_STATUS.IN_PROGRESS) score += 1;
   if (extractConfidenceScore(ticket.lastConfidence) < 0.45) score += 2;
   if (ticket.rating && ticket.rating <= 2) score += 1;
   if (ticket.messageCount >= 4) score += 1;

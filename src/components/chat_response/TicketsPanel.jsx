@@ -132,7 +132,7 @@ export default function TicketsPanel({ tickets, onClear, onSendStudentMessage })
       <main className="flex min-h-0 flex-1 flex-col overflow-hidden bg-[#f1f3f6]">
 
         {/* Support header banner */}
-        <div className="bg-gradient-to-r from-[#1a1a2e] to-[#16213e] px-4 py-3 sm:px-6">
+        <div className="bg-gradient-to-r from-[#3d0000] to-[#7B1111] px-4 py-3 sm:px-6">
           <div className="mb-2 flex items-center justify-between gap-3">
             <button
               className="flex items-center gap-1.5 rounded-lg bg-white/10 px-3 py-1.5 text-xs font-semibold text-white/80 transition hover:bg-white/20"

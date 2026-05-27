@@ -51,7 +51,11 @@ export default function ChatMain() {
   const handleSend = useCallback(
     async (text) => {
       const userMessage = createMessage('user', text);
-      setMessages((previousMessages) => [...previousMessages, userMessage]);
+      // Clear feedback from all previous messages so options only show on last AI response
+      setMessages((previousMessages) => [
+        ...previousMessages.map((m) => ({ ...m, showFeedback: false })),
+        userMessage,
+      ]);
       setIsLoading(true);
 
       if (!breadcrumb) {
@@ -105,7 +109,7 @@ export default function ChatMain() {
         ...extraData,
         breadcrumb,
         ownerId: userId || 'anon',
-        ownerName: user?.name || 'Usuario',
+        ownerName: user?.name || user?.nickname || user?.email?.split('@')[0] || 'Usuario',
         ownerEmail: user?.email || '',
       }
     );

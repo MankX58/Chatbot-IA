@@ -448,6 +448,7 @@ export default function ChatArea({
 
     if (!trimmed || isLoading || chatLocked) return;
 
+    setShowNotResolvedOptions(false);
     onSend(trimmed);
     setInput('');
   };

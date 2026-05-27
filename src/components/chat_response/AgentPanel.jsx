@@ -141,7 +141,7 @@ export default function AgentPanel() {
     <main className="flex min-h-0 flex-1 flex-col overflow-hidden bg-[#f1f3f6]">
 
       {/* ── Agent identity header (always visible) ── */}
-      <div className="bg-gradient-to-r from-[#1a1a2e] to-[#16213e] px-4 py-4 sm:px-6">
+      <div className="bg-gradient-to-r from-[#3d0000] to-[#7B1111] px-4 py-4 sm:px-6">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-3">
             <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/15">
@@ -319,28 +319,35 @@ export default function AgentPanel() {
                     return (
                       <div
                         key={idx}
-                        className={`flex max-w-[86%] gap-2.5 ${isUser ? 'self-end flex-row-reverse' : 'self-start'}`}
+                        className={`flex max-w-[86%] gap-2.5 ${isAgent ? 'self-end flex-row-reverse' : 'self-start'}`}
                       >
-                        {!isUser && (isAgent ? <AgentAvatar name={message.agentName} /> : <BotAvatar />)}
+                        {!isAgent && (isUser
+                          ? (
+                            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-neutral-300 text-[11px] font-bold text-neutral-600">
+                              {ownerLabel.charAt(0).toUpperCase()}
+                            </div>
+                          )
+                          : <BotAvatar />
+                        )}
                         <div className="flex flex-col gap-1">
                           <span className={`text-[11px] font-semibold uppercase tracking-[0.05em]
-                            ${isUser
-                              ? 'text-right text-neutral-400'
-                              : isAgent
-                                ? 'text-[#B71C1C]'
+                            ${isAgent
+                              ? 'text-right text-[#B71C1C]'
+                              : isUser
+                                ? 'text-neutral-500'
                                 : 'text-neutral-400'}`}
                           >
-                            {isUser
-                              ? ownerLabel
-                              : isAgent
-                                ? `Agente · ${message.agentName}`
+                            {isAgent
+                              ? `Agente · ${message.agentName}`
+                              : isUser
+                                ? ownerLabel
                                 : 'Asistente virtual'}
                           </span>
                           <div className={`rounded-2xl px-4 py-3 text-sm leading-relaxed shadow-sm
-                            ${isUser
-                              ? 'rounded-br-sm bg-neutral-200 text-neutral-800'
-                              : isAgent
-                                ? 'rounded-bl-sm border border-[#D32F2F]/20 bg-[#fff5f5] text-neutral-800'
+                            ${isAgent
+                              ? 'rounded-br-sm bg-[#D32F2F] text-white'
+                              : isUser
+                                ? 'rounded-bl-sm border border-neutral-200 bg-neutral-100 text-neutral-800'
                                 : 'rounded-bl-sm border border-neutral-200 bg-white text-neutral-700'}`}
                           >
                             {message.content.split('\n').map((line, li) => (
