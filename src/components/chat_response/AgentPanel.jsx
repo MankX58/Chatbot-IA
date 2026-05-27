@@ -371,7 +371,7 @@ export default function AgentPanel() {
                   {(selectedTicket.messages || []).map((message, idx) => {
                     if (message.role === 'context') {
                       return (
-                        <div key={idx} className="my-2 self-center w-full max-w-[90%] rounded-xl border border-dashed border-[#B71C1C]/35 bg-white px-4 py-3 text-sm text-neutral-800 text-center shadow-sm">
+                        <div key={idx} className="my-2 self-center w-full max-w-[90%] rounded-xl border-2 border-dashed border-[#B71C1C] bg-[#fff5f5] px-4 py-3 text-sm text-neutral-800 text-center shadow-sm">
                           <span className="block text-[11px] font-bold uppercase tracking-[0.08em] text-[#B71C1C] mb-1">
                             Contexto de Escalamiento del Usuario
                           </span>

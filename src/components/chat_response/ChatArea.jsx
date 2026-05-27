@@ -21,7 +21,7 @@ function BotIcon() {
 function MessageBubble({ message, onFeedback }) {
   if (message.role === 'context') {
     return (
-      <div className="my-2 self-center w-full max-w-[90%] rounded-xl border border-dashed border-[#D32F2F]/30 bg-[#fff5f5] px-4 py-3 text-sm text-neutral-800 text-center shadow-sm">
+      <div className="my-2 self-center w-full max-w-[90%] rounded-xl border-2 border-dashed border-[#D32F2F] bg-[#fff5f5] px-4 py-3 text-sm text-neutral-800 text-center shadow-sm">
         <span className="block text-[11px] font-bold uppercase tracking-[0.08em] text-[#D32F2F] mb-1">
           Contexto de Escalamiento a Soporte
         </span>
@@ -573,7 +573,7 @@ export default function ChatArea({
       <EscalationModal
         isOpen={showEscalationModal}
         onClose={() => setShowEscalationModal(false)}
-        onSubmit={({ escalationContext }) => onEscalated?.({ escalationContext })}
+        onSubmit={({ escalationContext, priority }) => onEscalated?.({ escalationContext, priority })}
       />
     </main>
   );
