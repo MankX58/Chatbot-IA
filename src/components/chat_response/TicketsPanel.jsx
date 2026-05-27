@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { useAuth0 } from '@auth0/auth0-react';
 import {
   formatConfidence,
   formatStars,
@@ -94,7 +95,7 @@ function SupportStatusBar({ status }) {
 
 function AgentAvatar({ name }) {
   return (
-    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-indigo-600 to-indigo-800 text-[11px] font-bold text-white shadow-sm">
+    <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#B71C1C] to-[#D32F2F] text-[11px] font-bold text-white shadow-sm">
       {name ? name.charAt(0).toUpperCase() : 'A'}
     </div>
   );
@@ -102,6 +103,7 @@ function AgentAvatar({ name }) {
 
 /* ─── Main component ───────────────────────────────── */
 export default function TicketsPanel({ tickets, onClear, onSendStudentMessage }) {
+  const { user } = useAuth0();
   const [selected,    setSelected]    = useState(null);
   const [studentMsg,  setStudentMsg]  = useState('');
   const messagesEndRef                = useRef(null);
@@ -198,15 +200,15 @@ export default function TicketsPanel({ tickets, onClear, onSendStudentMessage })
                 )}
                 <div className="flex flex-col gap-1">
                   <span className={`text-[11px] font-semibold uppercase tracking-[0.05em]
-                    ${isUser ? 'text-right text-neutral-400' : isAgent ? 'text-indigo-600' : 'text-neutral-400'}`}
+                    ${isUser ? 'text-right text-neutral-400' : isAgent ? 'text-[#D32F2F]' : 'text-neutral-400'}`}
                   >
-                    {isUser ? 'Tú' : isAgent ? `Agente · ${message.agentName || 'Soporte'}` : 'Asistente virtual'}
+                    {isUser ? (user?.name || 'Tú') : isAgent ? `Agente · ${message.agentName || 'Soporte'}` : 'Asistente virtual'}
                   </span>
                   <div className={`rounded-2xl px-4 py-3 text-sm leading-relaxed shadow-sm
                     ${isUser
                       ? 'rounded-br-sm bg-[#D32F2F] text-white'
                       : isAgent
-                        ? 'rounded-bl-sm border border-indigo-100 bg-indigo-50 text-indigo-900'
+                        ? 'rounded-bl-sm border border-[#D32F2F]/20 bg-[#fff5f5] text-neutral-800'
                         : 'rounded-bl-sm border border-neutral-200 bg-white text-neutral-700'}`}
                   >
                     {message.content.split('\n').map((line, li) => (
