@@ -112,10 +112,10 @@ export default function AgentPanel() {
     }
   }, [filteredTickets, selectedId]);
 
-  // Auto-open details when there's escalation context
+  // Initialize detailsOpen as false on ticket change
   useEffect(() => {
     if (selectedTicket) {
-      setDetailsOpen(Boolean(selectedTicket.escalationContext));
+      setDetailsOpen(false);
     }
   }, [selectedTicket?.id]); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -329,12 +329,6 @@ export default function AgentPanel() {
                   {/* Collapsible details */}
                   {detailsOpen && (
                     <div className="border-t border-neutral-100 px-4 pb-3 pt-2">
-                      {selectedTicket.escalationContext && (
-                        <div className="mb-3 rounded-xl border-l-4 border-[#D32F2F] bg-[#fff5f5] px-3 py-2">
-                          <p className="mb-0.5 text-[10px] font-bold uppercase tracking-[0.1em] text-[#D32F2F]">Motivo del escalamiento</p>
-                          <p className="text-sm text-neutral-800">{selectedTicket.escalationContext}</p>
-                        </div>
-                      )}
                       <div className="flex flex-wrap items-center justify-between gap-2">
                         <div className="flex items-center gap-3 text-xs text-neutral-500">
                           <span><span className="font-semibold text-neutral-700">{(selectedTicket.messages || []).length}</span> mensajes</span>
