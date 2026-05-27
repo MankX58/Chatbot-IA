@@ -82,7 +82,13 @@ export default function AgentPanel() {
   const [selectedId,     setSelectedId]     = useState(null);
   const [response,       setResponse]       = useState('');
   const [addToKB,        setAddToKB]        = useState(true);
+  const [detailsOpen,    setDetailsOpen]    = useState(false);
   const messagesEndRef = useRef(null);
+
+  // Auto-open details when there's escalation context
+  useEffect(() => {
+    setDetailsOpen(Boolean(selectedTicket?.escalationContext));
+  }, [selectedTicket?.id]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const filteredTickets = tickets.filter((ticket) => {
     const activeMatch =
@@ -253,61 +259,84 @@ export default function AgentPanel() {
           <section className="flex min-h-0 flex-col overflow-hidden bg-[#f8f9fa]">
             {selectedTicket ? (
               <>
-                {/* Case header */}
-                <div className="shrink-0 border-b border-neutral-200 bg-white px-5 py-4">
-                  <div className="mb-3 flex flex-wrap items-start justify-between gap-3">
-                    <div className="min-w-0">
-                      <p className="text-[11px] font-semibold uppercase tracking-[0.1em] text-neutral-400">
-                        {selectedTicket.breadcrumb || 'CONSULTA GENERAL'} ·{' '}
-                        <span className="text-neutral-500 normal-case font-medium">
-                          {selectedTicket.ownerName || selectedTicket.ownerEmail || 'Usuario'}
+                {/* ── Compact case header ── */}
+                <div className="shrink-0 border-b border-neutral-200 bg-white">
+                  {/* Always-visible top bar */}
+                  <div className="flex items-center gap-3 px-4 py-2.5">
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-1.5 flex-wrap">
+                        <span className="text-[11px] font-bold uppercase tracking-[0.08em] text-[#B71C1C]">
+                          {selectedTicket.breadcrumb || 'CONSULTA GENERAL'}
                         </span>
-                      </p>
-                      <h2 className="mt-0.5 text-sm font-bold text-neutral-900 line-clamp-2">{selectedTicket.preview}</h2>
-                      <p className="mt-0.5 text-[11px] text-neutral-400">
-                        {formatTicketDate(selectedTicket.updatedAt || selectedTicket.date)}
-                      </p>
+                        <span className="text-neutral-300 text-xs">·</span>
+                        <span className="text-[12px] font-medium text-neutral-600 truncate">
+                          {(() => {
+                            const n = selectedTicket.ownerName;
+                            if (n && n !== 'Usuario') return n;
+                            if (selectedTicket.ownerEmail) return selectedTicket.ownerEmail.split('@')[0];
+                            return 'Usuario';
+                          })()}
+                        </span>
+                      </div>
+                      <p className="mt-0.5 text-sm font-semibold text-neutral-800 line-clamp-1">{selectedTicket.preview}</p>
                     </div>
-                    <div className="flex shrink-0 flex-wrap gap-2">
+                    <div className="flex shrink-0 items-center gap-2">
                       <PriorityBadge priority={selectedTicket.priority} />
                       <StatusBadge status={selectedTicket.status} />
-                      <span className="rounded-full border border-neutral-200 px-2.5 py-0.5 text-[11px] font-semibold text-neutral-500">
-                        IA: {formatConfidence(selectedTicket.lastConfidence)}
-                      </span>
+                      <button
+                        onClick={() => setDetailsOpen((o) => !o)}
+                        title={detailsOpen ? 'Ocultar detalles' : 'Mostrar detalles'}
+                        className="flex h-7 w-7 cursor-pointer items-center justify-center rounded-lg border border-neutral-200 bg-white text-neutral-400 transition hover:border-[#B71C1C] hover:text-[#B71C1C]"
+                      >
+                        <svg
+                          width="14" height="14" viewBox="0 0 24 24" fill="none"
+                          stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"
+                          className={`transition-transform duration-200 ${detailsOpen ? 'rotate-180' : ''}`}
+                        >
+                          <polyline points="6 9 12 15 18 9" />
+                        </svg>
+                      </button>
                     </div>
                   </div>
 
-                  {/* Escalation context */}
-                  {selectedTicket.escalationContext && (
-                    <div className="mb-3 rounded-xl border-l-4 border-[#D32F2F] bg-[#fff5f5] px-4 py-2.5">
-                      <p className="mb-0.5 text-[10px] font-bold uppercase tracking-[0.1em] text-[#D32F2F]">
-                        Motivo del escalamiento
-                      </p>
-                      <p className="text-sm text-neutral-800">{selectedTicket.escalationContext}</p>
+                  {/* Collapsible details */}
+                  {detailsOpen && (
+                    <div className="border-t border-neutral-100 px-4 pb-3 pt-2">
+                      {selectedTicket.escalationContext && (
+                        <div className="mb-3 rounded-xl border-l-4 border-[#D32F2F] bg-[#fff5f5] px-3 py-2">
+                          <p className="mb-0.5 text-[10px] font-bold uppercase tracking-[0.1em] text-[#D32F2F]">Motivo del escalamiento</p>
+                          <p className="text-sm text-neutral-800">{selectedTicket.escalationContext}</p>
+                        </div>
+                      )}
+                      <div className="flex flex-wrap items-center justify-between gap-2">
+                        <div className="flex items-center gap-3 text-xs text-neutral-500">
+                          <span><span className="font-semibold text-neutral-700">{selectedTicket.messages.length}</span> mensajes</span>
+                          <span>IA: <span className="font-semibold text-neutral-700">{formatConfidence(selectedTicket.lastConfidence)}</span></span>
+                          <span className="text-neutral-400">{formatTicketDate(selectedTicket.updatedAt || selectedTicket.date)}</span>
+                        </div>
+                        <div className="flex flex-wrap gap-2">
+                          <button
+                            className="rounded-xl bg-amber-100 px-3 py-1.5 text-xs font-semibold text-amber-800 transition hover:bg-amber-200"
+                            onClick={() => handleStatusChange(selectedTicket, TICKET_STATUS.IN_PROGRESS)}
+                          >
+                            En gestión
+                          </button>
+                          <button
+                            className="rounded-xl bg-green-100 px-3 py-1.5 text-xs font-semibold text-green-800 transition hover:bg-green-200"
+                            onClick={() => handleStatusChange(selectedTicket, TICKET_STATUS.RESOLVED)}
+                          >
+                            Resuelto
+                          </button>
+                          <button
+                            className="rounded-xl bg-neutral-100 px-3 py-1.5 text-xs font-semibold text-neutral-600 transition hover:bg-neutral-200"
+                            onClick={() => handleStatusChange(selectedTicket, TICKET_STATUS.CLOSED)}
+                          >
+                            Cerrar
+                          </button>
+                        </div>
+                      </div>
                     </div>
                   )}
-
-                  {/* Status actions */}
-                  <div className="flex flex-wrap gap-2">
-                    <button
-                      className="rounded-xl bg-amber-100 px-4 py-2 text-xs font-semibold text-amber-800 transition hover:bg-amber-200"
-                      onClick={() => handleStatusChange(selectedTicket, TICKET_STATUS.IN_PROGRESS)}
-                    >
-                      Marcar en gestión
-                    </button>
-                    <button
-                      className="rounded-xl bg-green-100 px-4 py-2 text-xs font-semibold text-green-800 transition hover:bg-green-200"
-                      onClick={() => handleStatusChange(selectedTicket, TICKET_STATUS.RESOLVED)}
-                    >
-                      Marcar resuelto
-                    </button>
-                    <button
-                      className="rounded-xl bg-neutral-100 px-4 py-2 text-xs font-semibold text-neutral-600 transition hover:bg-neutral-200"
-                      onClick={() => handleStatusChange(selectedTicket, TICKET_STATUS.CLOSED)}
-                    >
-                      Cerrar ticket
-                    </button>
-                  </div>
                 </div>
 
                 {/* ── Messages (chat view) ── */}
@@ -315,7 +344,10 @@ export default function AgentPanel() {
                   {selectedTicket.messages.map((message, idx) => {
                     const isUser  = message.role === 'user';
                     const isAgent = Boolean(message.agentName);
-                    const ownerLabel = selectedTicket.ownerName || selectedTicket.ownerEmail || 'Usuario';
+                    const rawName = selectedTicket.ownerName;
+                    const ownerLabel = (rawName && rawName !== 'Usuario')
+                      ? rawName
+                      : (selectedTicket.ownerEmail?.split('@')[0] || 'Usuario');
                     return (
                       <div
                         key={idx}
