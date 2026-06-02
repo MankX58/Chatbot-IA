@@ -76,7 +76,7 @@ function BotAvatar() {
 /* ─── Main component ───────────────────────────── */
 export default function AgentPanel() {
   const { user } = useAuth0();
-  const { tickets, setTicketStatus, registerSupportResponse } = useSupportTickets();
+  const { tickets, setTicketStatus, registerSupportResponse, setTicketPriority } = useSupportTickets();
   const [statusFilter,   setStatusFilter]   = useState('active');
   const [priorityFilter, setPriorityFilter] = useState('all');
   const [selectedId,     setSelectedId]     = useState(null);
@@ -336,6 +336,15 @@ export default function AgentPanel() {
                           <span className="text-neutral-400">{formatTicketDate(selectedTicket.updatedAt || selectedTicket.date)}</span>
                         </div>
                         <div className="flex flex-wrap gap-2">
+                          <select
+                            className="rounded-xl border border-neutral-200 bg-white px-3 py-1.5 text-xs font-semibold text-neutral-600 outline-none focus:border-[#B71C1C] cursor-pointer"
+                            value={selectedTicket.priority || 'Media'}
+                            onChange={(e) => setTicketPriority(selectedTicket.storageKey, selectedTicket.id, e.target.value)}
+                          >
+                            <option value="Alta">Prioridad: Alta</option>
+                            <option value="Media">Prioridad: Media</option>
+                            <option value="Baja">Prioridad: Baja</option>
+                          </select>
                           <button
                             className="rounded-xl bg-amber-100 px-3 py-1.5 text-xs font-semibold text-amber-800 transition hover:bg-amber-200"
                             onClick={() => handleStatusChange(selectedTicket, TICKET_STATUS.IN_PROGRESS)}

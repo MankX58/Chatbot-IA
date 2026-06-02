@@ -66,6 +66,28 @@ export function useSupportTickets() {
     });
   }, [fetchTickets]);
 
+  const setTicketPriority = useCallback(async (storageKey, ticketId, priority) => {
+    setTickets((prevTickets) => {
+      const localTicket = prevTickets.find((t) => t.id === ticketId);
+      if (!localTicket) return prevTickets;
+
+      const updatedTicket = {
+        ...localTicket,
+        priority,
+      };
+
+      fetch(buildApiUrl('/api/tickets'), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updatedTicket),
+      })
+        .then(() => fetchTickets())
+        .catch((err) => console.error('Error al actualizar prioridad de ticket:', err));
+
+      return prevTickets.map((t) => (t.id === ticketId ? updatedTicket : t));
+    });
+  }, [fetchTickets]);
+
   const registerSupportResponse = useCallback(async (storageKey, ticketId, response) => {
     setTickets((prevTickets) => {
       const localTicket = prevTickets.find((t) => t.id === ticketId);
@@ -106,6 +128,7 @@ export function useSupportTickets() {
     error,
     reload: fetchTickets,
     setTicketStatus,
+    setTicketPriority,
     registerSupportResponse,
   };
 }

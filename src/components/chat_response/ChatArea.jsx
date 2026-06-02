@@ -224,79 +224,27 @@ function RatingModal({ isOpen, onClose, onSubmit }) {
   );
 }
 
-const PRIORITY_OPTIONS = [
-  {
-    value: 'Baja',
-    label: 'Baja',
-    description: 'Sin urgencia inmediata',
-    color: 'text-green-700',
-    border: 'border-green-400',
-    bg: 'bg-green-50',
-    dot: 'bg-green-500',
-    icon: (
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <circle cx="12" cy="12" r="10" />
-        <polyline points="8 12 12 16 16 12" />
-        <line x1="12" y1="8" x2="12" y2="16" />
-      </svg>
-    ),
-  },
-  {
-    value: 'Media',
-    label: 'Media',
-    description: 'Requiere atención pronto',
-    color: 'text-amber-700',
-    border: 'border-amber-400',
-    bg: 'bg-amber-50',
-    dot: 'bg-amber-500',
-    icon: (
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <circle cx="12" cy="12" r="10" />
-        <line x1="12" y1="8" x2="12" y2="12" />
-        <line x1="12" y1="16" x2="12.01" y2="16" />
-      </svg>
-    ),
-  },
-  {
-    value: 'Alta',
-    label: 'Alta',
-    description: 'Situación urgente',
-    color: 'text-red-700',
-    border: 'border-red-400',
-    bg: 'bg-red-50',
-    dot: 'bg-red-500',
-    icon: (
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
-        <line x1="12" y1="9" x2="12" y2="13" />
-        <line x1="12" y1="17" x2="12.01" y2="17" />
-      </svg>
-    ),
-  },
-];
+
 
 function EscalationModal({ isOpen, onClose, onSubmit }) {
   const [context, setContext] = useState('');
-  const [priority, setPriority] = useState('Media');
   const [submitted, setSubmitted] = useState(false);
 
   const handleSubmit = () => {
     if (!context.trim()) return;
-    onSubmit({ escalationContext: context.trim(), priority });
+    onSubmit({ escalationContext: context.trim() });
     setSubmitted(true);
 
     setTimeout(() => {
       onClose();
       setSubmitted(false);
       setContext('');
-      setPriority('Media');
     }, 3000);
   };
 
   const handleClose = () => {
     onClose();
     setContext('');
-    setPriority('Media');
     setSubmitted(false);
   };
 
@@ -320,29 +268,7 @@ function EscalationModal({ isOpen, onClose, onSubmit }) {
               <p className="m-0 text-sm text-neutral-500">Describe tu situación y selecciona la prioridad para que el equipo pueda atenderte mejor.</p>
             </div>
 
-            <div className="mb-5">
-              <label className="mb-3 block text-xs font-semibold uppercase tracking-[0.5px] text-neutral-500">Nivel de prioridad</label>
-              <div className="grid grid-cols-3 gap-2">
-                {PRIORITY_OPTIONS.map((opt) => {
-                  const isSelected = priority === opt.value;
-                  return (
-                    <button
-                      key={opt.value}
-                      type="button"
-                      onClick={() => setPriority(opt.value)}
-                      className={`flex cursor-pointer flex-col items-center gap-1.5 rounded-xl border-2 px-3 py-3 text-center transition-all duration-150
-                        ${isSelected ? `${opt.border} ${opt.bg} shadow-sm scale-[1.03]` : 'border-neutral-200 bg-white hover:border-neutral-300 hover:bg-neutral-50'}`}
-                    >
-                      <span className={isSelected ? opt.color : 'text-neutral-400'}>
-                        {opt.icon}
-                      </span>
-                      <span className={`text-sm font-bold ${isSelected ? opt.color : 'text-neutral-600'}`}>{opt.label}</span>
-                      <span className={`text-[11px] leading-tight ${isSelected ? opt.color : 'text-neutral-400'}`}>{opt.description}</span>
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
+
 
             <div className="mb-5">
               <label className="mb-3 block text-xs font-semibold uppercase tracking-[0.5px] text-neutral-500">Contexto del problema</label>
@@ -374,7 +300,7 @@ function EscalationModal({ isOpen, onClose, onSubmit }) {
               </svg>
             </div>
             <h3 className="m-0 mb-2 text-lg font-bold text-neutral-800">¡Escalamiento enviado!</h3>
-            <p className="m-0 text-sm leading-relaxed text-neutral-500">Hemos registrado tu caso con prioridad <strong>{priority}</strong>. Recibirás actualizaciones sobre el progreso en tu correo institucional.</p>
+            <p className="m-0 text-sm leading-relaxed text-neutral-500">Hemos registrado tu caso y se le ha asignado una prioridad. Recibirás actualizaciones sobre el progreso en tu correo institucional.</p>
           </div>
         )}
       </div>
@@ -573,7 +499,7 @@ export default function ChatArea({
       <EscalationModal
         isOpen={showEscalationModal}
         onClose={() => setShowEscalationModal(false)}
-        onSubmit={({ escalationContext, priority }) => onEscalated?.({ escalationContext, priority })}
+        onSubmit={({ escalationContext }) => onEscalated?.({ escalationContext })}
       />
     </main>
   );

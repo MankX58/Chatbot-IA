@@ -152,9 +152,20 @@ export default function ChatMain() {
     saveChatToTickets({ rating, feedback, status: TICKET_STATUS.RESOLVED });
   }, [saveChatToTickets]);
 
-  const handleChatEscalated = useCallback(({ escalationContext, priority }) => {
-    saveChatToTickets({ status: TICKET_STATUS.ESCALATED, escalationContext, priority: priority || 'Media' });
-  }, [saveChatToTickets]);
+  const handleChatEscalated = useCallback(({ escalationContext }) => {
+    let calculatedPriority = 'Media';
+    const assistantMessages = messages.filter(m => m.role === 'assistant' && m.confidence);
+    const lastConfidenceMessage = assistantMessages[assistantMessages.length - 1];
+    
+    if (lastConfidenceMessage && lastConfidenceMessage.confidence) {
+      const confLabel = lastConfidenceMessage.confidence.label;
+      if (confLabel === 'Alta') calculatedPriority = 'Baja';
+      else if (confLabel === 'Media') calculatedPriority = 'Media';
+      else if (confLabel === 'Baja') calculatedPriority = 'Alta';
+    }
+
+    saveChatToTickets({ status: TICKET_STATUS.ESCALATED, escalationContext, priority: calculatedPriority });
+  }, [saveChatToTickets, messages]);
 
   const handleChatClosed = useCallback(() => {
     saveChatToTickets({ status: TICKET_STATUS.CLOSED });
