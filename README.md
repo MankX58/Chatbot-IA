@@ -80,29 +80,3 @@ npm install
 # Ejecutar en desarrollo
 npm run dev
 ```
-
-## 🔐 Variables de entorno
-
-Frontend (`.env.local`):
-
-```bash
-VITE_AUTH0_DOMAIN=tu-dominio.auth0.com
-VITE_AUTH0_CLIENT_ID=tu-client-id
-VITE_AUTH0_AUDIENCE=
-VITE_API_BASE_URL=https://tu-app.vercel.app
-VITE_AUTH0_ROLES_CLAIM=https://udemedellin.edu.co/roles
-VITE_SUPPORT_AGENT_EMAILS=agente1@correo.com,agente2@correo.com
-VITE_ADMIN_EMAILS=admin1@correo.com
-```
-
-Backend en Vercel:
-
-```bash
-DEEPSEEK_API_KEY=tu_api_key
-```
-
-Notas:
-
-- `DEEPSEEK_API_KEY` solo debe vivir en Vercel y se consume desde `/api/chat`.
-- `VITE_API_BASE_URL` es opcional. Sirve para que un frontend local apunte al deployment de Vercel.
-- Si usas el mismo dominio en Vercel, el frontend consume `/api/chat` y `/api/health` sin configuracion adicional.
