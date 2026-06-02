@@ -62,8 +62,6 @@ export function getAvailableSections(roles = []) {
 
   if (normalizedRoles.has(USER_ROLES.ADMIN)) {
     return [
-      APP_SECTIONS.CHAT,
-      APP_SECTIONS.TICKETS,
       APP_SECTIONS.AGENT,
       APP_SECTIONS.ANALYTICS,
     ];
